@@ -26,11 +26,15 @@ data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
 
 # Introduction
 
+## Significance
 
+## Estimand
 
 # Data
 
+## Overview
 
+## Measurement
 
 ```{r}
 #| echo: false
@@ -38,7 +42,7 @@ data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
 #| message: false
 library(skimr)
 skim_summary <- data %>%
-  select(-PUF_ID) %>%  # Remove 'PUF_ID' column
+  #select(-PUF_ID) %>%  # Remove 'PUF_ID' column
   select(where(is.numeric)) %>%  # Keep only numeric columns
   skim()
 
@@ -98,8 +102,6 @@ ggplot(data_cleaned, aes(x = finalwt)) +
 
 # Model
 
-# Linear Regression Model
-
 The linear regression model can be expressed mathematically as:
 
 $$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_i + \beta_3 \cdot \text{FWBscore}_i + \beta_4 \cdot \text{FSscore}_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma^{2})$$
@@ -115,7 +117,7 @@ $$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_
   - $\text{FSscore}_i$: Financial skill scale score.
 
 
-
+# Results
 
 
 ```{r}
@@ -150,7 +152,7 @@ kable(
 ```
 
 
-# Results
+
 
 # Discussion
 
@@ -173,6 +175,8 @@ We would like to express our gratitude to the developers and contributors of R [
 - `styler` [@styler]: This package is helpful for styling the code.
 
 - `arrow` [@arrow]: This package provides a convenient and efficient way to work with parquet format.
+
+- `validate` [@validate]: This package provide useful functions for data tests.
 
 We are grateful to the Consumer Financial Protection Bureau (CFPB) for conducting the Financial Well-Being Survey [@cfpb_fwb_survey] and making the data publicly available. Their dedication to collecting and sharing such vital information significantly contributes to research on financial well-being.
 

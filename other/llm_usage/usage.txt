@@ -154,11 +154,6 @@ Here’s an acknowledgment that follows your provided format:
 ```markdown
 We are grateful to the **Consumer Financial Protection Bureau (CFPB)** for conducting the Financial Well-Being Survey and making the data publicly available. Their dedication to collecting and sharing such vital information significantly contributes to research on financial well-being.
 
-Additionally, we would like to thank the **City of Toronto** and the **Open Data Portal** for providing access to the dataset through the `opendatatoronto` package [@opendatatoronto]. The availability of such high-quality, open-source data is crucial for conducting meaningful and impactful research.
-
-We also appreciate the developers and contributors of the **`arrow`** R package [@arrow], which provides a convenient and efficient way to work with the **Apache Arrow** format. Their work in creating this package has greatly facilitated our data processing efforts.
-
-Finally, we would like to extend our gratitude to all those who contributed to the development and maintenance of the **R programming language** and its ecosystem, as well as the broader **open-source community**, whose continuous efforts make such research possible.
 ```
 
 
