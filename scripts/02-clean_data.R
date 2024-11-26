@@ -1,21 +1,30 @@
+# Purpose: Cleans the raw data after download
+# Author: CFPB, Xinxiang Gao
+# Date: 26 November 2024
+# Contact: xinxiang.gao@mail.utoronto.ca
+# License: MIT
+# Acknowledgements: some of the code below utilized provided Code for analytics tools from CFPB.
+# https://www.consumerfinance.gov/data-research/financial-well-being-survey-data/
+
+
 # The plyr library will be used to help us remap values
-library(plyr)
+library(dplyr)
 
 # Load the data in to a dataframe for later use, please enter the appropriate path for the CSV.
-df <- read.csv('../data/01-raw_data/NFWBS_PUF_2016_data.csv')
+df <- read.csv("data/01-raw_data/NFWBS_PUF_2016_data.csv")
 
 # This code maps values from the dummy variables to the descriptors from the codebook.
-df$sample = revalue(factor(df$sample), c(
+df$sample <- revalue(factor(df$sample), c(
   `1` = "General population",
   `2` = "Age 62+ oversample",
   `3` = "Race/ethnicity and poverty oversample"
 ))
-df$fpl = revalue(factor(df$fpl), c(
+df$fpl <- revalue(factor(df$fpl), c(
   `1` = "<100% FPL",
   `2` = "100%-199% FPL",
   `3` = "200%+ FPL"
 ))
-df$SWB_1 = revalue(factor(df$SWB_1), c(
+df$SWB_1 <- revalue(factor(df$SWB_1), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "1 Strongly disagree",
@@ -26,7 +35,7 @@ df$SWB_1 = revalue(factor(df$SWB_1), c(
   `6` = "6",
   `7` = "7 Strongly agree"
 ))
-df$SWB_2 = revalue(factor(df$SWB_2), c(
+df$SWB_2 <- revalue(factor(df$SWB_2), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "1 Strongly disagree",
@@ -37,7 +46,7 @@ df$SWB_2 = revalue(factor(df$SWB_2), c(
   `6` = "6",
   `7` = "7 Strongly agree"
 ))
-df$SWB_3 = revalue(factor(df$SWB_3), c(
+df$SWB_3 <- revalue(factor(df$SWB_3), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "1 Strongly disagree",
@@ -48,11 +57,11 @@ df$SWB_3 = revalue(factor(df$SWB_3), c(
   `6` = "6",
   `7` = "7 Strongly agree"
 ))
-df$FWBscore = revalue(factor(df$FWBscore), c(
+df$FWBscore <- revalue(factor(df$FWBscore), c(
   `-4` = "Response not written to database",
   `-1` = "Refused"
 ))
-df$FWB1_1 = revalue(factor(df$FWB1_1), c(
+df$FWB1_1 <- revalue(factor(df$FWB1_1), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -61,7 +70,7 @@ df$FWB1_1 = revalue(factor(df$FWB1_1), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB1_2 = revalue(factor(df$FWB1_2), c(
+df$FWB1_2 <- revalue(factor(df$FWB1_2), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -70,7 +79,7 @@ df$FWB1_2 = revalue(factor(df$FWB1_2), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB1_3 = revalue(factor(df$FWB1_3), c(
+df$FWB1_3 <- revalue(factor(df$FWB1_3), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -79,7 +88,7 @@ df$FWB1_3 = revalue(factor(df$FWB1_3), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB1_4 = revalue(factor(df$FWB1_4), c(
+df$FWB1_4 <- revalue(factor(df$FWB1_4), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -88,7 +97,7 @@ df$FWB1_4 = revalue(factor(df$FWB1_4), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB1_5 = revalue(factor(df$FWB1_5), c(
+df$FWB1_5 <- revalue(factor(df$FWB1_5), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -97,7 +106,7 @@ df$FWB1_5 = revalue(factor(df$FWB1_5), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB1_6 = revalue(factor(df$FWB1_6), c(
+df$FWB1_6 <- revalue(factor(df$FWB1_6), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Not at all",
@@ -106,7 +115,7 @@ df$FWB1_6 = revalue(factor(df$FWB1_6), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FWB2_1 = revalue(factor(df$FWB2_1), c(
+df$FWB2_1 <- revalue(factor(df$FWB2_1), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Never",
@@ -115,7 +124,7 @@ df$FWB2_1 = revalue(factor(df$FWB2_1), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FWB2_2 = revalue(factor(df$FWB2_2), c(
+df$FWB2_2 <- revalue(factor(df$FWB2_2), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Never",
@@ -124,7 +133,7 @@ df$FWB2_2 = revalue(factor(df$FWB2_2), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FWB2_3 = revalue(factor(df$FWB2_3), c(
+df$FWB2_3 <- revalue(factor(df$FWB2_3), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Never",
@@ -133,7 +142,7 @@ df$FWB2_3 = revalue(factor(df$FWB2_3), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FWB2_4 = revalue(factor(df$FWB2_4), c(
+df$FWB2_4 <- revalue(factor(df$FWB2_4), c(
   `-4` = "Response not written to database",
   `-1` = "Refused",
   `1` = "Never",
@@ -142,10 +151,10 @@ df$FWB2_4 = revalue(factor(df$FWB2_4), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FSscore = revalue(factor(df$FSscore), c(
+df$FSscore <- revalue(factor(df$FSscore), c(
   `-1` = "Refused"
 ))
-df$FS1_1 = revalue(factor(df$FS1_1), c(
+df$FS1_1 <- revalue(factor(df$FS1_1), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -153,7 +162,7 @@ df$FS1_1 = revalue(factor(df$FS1_1), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_2 = revalue(factor(df$FS1_2), c(
+df$FS1_2 <- revalue(factor(df$FS1_2), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -161,7 +170,7 @@ df$FS1_2 = revalue(factor(df$FS1_2), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_3 = revalue(factor(df$FS1_3), c(
+df$FS1_3 <- revalue(factor(df$FS1_3), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -169,7 +178,7 @@ df$FS1_3 = revalue(factor(df$FS1_3), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_4 = revalue(factor(df$FS1_4), c(
+df$FS1_4 <- revalue(factor(df$FS1_4), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -177,7 +186,7 @@ df$FS1_4 = revalue(factor(df$FS1_4), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_5 = revalue(factor(df$FS1_5), c(
+df$FS1_5 <- revalue(factor(df$FS1_5), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -185,7 +194,7 @@ df$FS1_5 = revalue(factor(df$FS1_5), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_6 = revalue(factor(df$FS1_6), c(
+df$FS1_6 <- revalue(factor(df$FS1_6), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -193,7 +202,7 @@ df$FS1_6 = revalue(factor(df$FS1_6), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS1_7 = revalue(factor(df$FS1_7), c(
+df$FS1_7 <- revalue(factor(df$FS1_7), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -201,7 +210,7 @@ df$FS1_7 = revalue(factor(df$FS1_7), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FS2_1 = revalue(factor(df$FS2_1), c(
+df$FS2_1 <- revalue(factor(df$FS2_1), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Rarely",
@@ -209,7 +218,7 @@ df$FS2_1 = revalue(factor(df$FS2_1), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FS2_2 = revalue(factor(df$FS2_2), c(
+df$FS2_2 <- revalue(factor(df$FS2_2), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Rarely",
@@ -217,7 +226,7 @@ df$FS2_2 = revalue(factor(df$FS2_2), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$FS2_3 = revalue(factor(df$FS2_3), c(
+df$FS2_3 <- revalue(factor(df$FS2_3), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Rarely",
@@ -225,7 +234,7 @@ df$FS2_3 = revalue(factor(df$FS2_3), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$SUBKNOWL1 = revalue(factor(df$SUBKNOWL1), c(
+df$SUBKNOWL1 <- revalue(factor(df$SUBKNOWL1), c(
   `-1` = "Refused",
   `1` = "1 - Very low",
   `2` = "2",
@@ -235,7 +244,7 @@ df$SUBKNOWL1 = revalue(factor(df$SUBKNOWL1), c(
   `6` = "6",
   `7` = "7 - Very high"
 ))
-df$ACT1_1 = revalue(factor(df$ACT1_1), c(
+df$ACT1_1 <- revalue(factor(df$ACT1_1), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -243,7 +252,7 @@ df$ACT1_1 = revalue(factor(df$ACT1_1), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$ACT1_2 = revalue(factor(df$ACT1_2), c(
+df$ACT1_2 <- revalue(factor(df$ACT1_2), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Very little",
@@ -251,12 +260,12 @@ df$ACT1_2 = revalue(factor(df$ACT1_2), c(
   `4` = "Very well",
   `5` = "Completely"
 ))
-df$FINGOALS = revalue(factor(df$FINGOALS), c(
+df$FINGOALS <- revalue(factor(df$FINGOALS), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$PROPPLAN_1 = revalue(factor(df$PROPPLAN_1), c(
+df$PROPPLAN_1 <- revalue(factor(df$PROPPLAN_1), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -264,7 +273,7 @@ df$PROPPLAN_1 = revalue(factor(df$PROPPLAN_1), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$PROPPLAN_2 = revalue(factor(df$PROPPLAN_2), c(
+df$PROPPLAN_2 <- revalue(factor(df$PROPPLAN_2), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -272,7 +281,7 @@ df$PROPPLAN_2 = revalue(factor(df$PROPPLAN_2), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$PROPPLAN_3 = revalue(factor(df$PROPPLAN_3), c(
+df$PROPPLAN_3 <- revalue(factor(df$PROPPLAN_3), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -280,7 +289,7 @@ df$PROPPLAN_3 = revalue(factor(df$PROPPLAN_3), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$PROPPLAN_4 = revalue(factor(df$PROPPLAN_4), c(
+df$PROPPLAN_4 <- revalue(factor(df$PROPPLAN_4), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -288,7 +297,7 @@ df$PROPPLAN_4 = revalue(factor(df$PROPPLAN_4), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$MANAGE1_1 = revalue(factor(df$MANAGE1_1), c(
+df$MANAGE1_1 <- revalue(factor(df$MANAGE1_1), c(
   `-1` = "Refused",
   `1` = "Not applicable or never",
   `2` = "Seldom",
@@ -296,7 +305,7 @@ df$MANAGE1_1 = revalue(factor(df$MANAGE1_1), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$MANAGE1_2 = revalue(factor(df$MANAGE1_2), c(
+df$MANAGE1_2 <- revalue(factor(df$MANAGE1_2), c(
   `-1` = "Refused",
   `1` = "Not applicable or never",
   `2` = "Seldom",
@@ -304,7 +313,7 @@ df$MANAGE1_2 = revalue(factor(df$MANAGE1_2), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$MANAGE1_3 = revalue(factor(df$MANAGE1_3), c(
+df$MANAGE1_3 <- revalue(factor(df$MANAGE1_3), c(
   `-1` = "Refused",
   `1` = "Not applicable or never",
   `2` = "Seldom",
@@ -312,7 +321,7 @@ df$MANAGE1_3 = revalue(factor(df$MANAGE1_3), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$MANAGE1_4 = revalue(factor(df$MANAGE1_4), c(
+df$MANAGE1_4 <- revalue(factor(df$MANAGE1_4), c(
   `-1` = "Refused",
   `1` = "Not applicable or never",
   `2` = "Seldom",
@@ -320,7 +329,7 @@ df$MANAGE1_4 = revalue(factor(df$MANAGE1_4), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$SAVEHABIT = revalue(factor(df$SAVEHABIT), c(
+df$SAVEHABIT <- revalue(factor(df$SAVEHABIT), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -329,7 +338,7 @@ df$SAVEHABIT = revalue(factor(df$SAVEHABIT), c(
   `5` = "Agree",
   `6` = "Strongly agree"
 ))
-df$FRUGALITY = revalue(factor(df$FRUGALITY), c(
+df$FRUGALITY <- revalue(factor(df$FRUGALITY), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -338,19 +347,19 @@ df$FRUGALITY = revalue(factor(df$FRUGALITY), c(
   `5` = "Agree",
   `6` = "Strongly agree"
 ))
-df$AUTOMATED_1 = revalue(factor(df$AUTOMATED_1), c(
+df$AUTOMATED_1 <- revalue(factor(df$AUTOMATED_1), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes",
   `7` = "I do not have this type of account"
 ))
-df$AUTOMATED_2 = revalue(factor(df$AUTOMATED_2), c(
+df$AUTOMATED_2 <- revalue(factor(df$AUTOMATED_2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes",
   `7` = "I do not have this type of account"
 ))
-df$ASK1_1 = revalue(factor(df$ASK1_1), c(
+df$ASK1_1 <- revalue(factor(df$ASK1_1), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Seldom",
@@ -358,7 +367,7 @@ df$ASK1_1 = revalue(factor(df$ASK1_1), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$ASK1_2 = revalue(factor(df$ASK1_2), c(
+df$ASK1_2 <- revalue(factor(df$ASK1_2), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Seldom",
@@ -366,7 +375,7 @@ df$ASK1_2 = revalue(factor(df$ASK1_2), c(
   `4` = "Often",
   `5` = "Always"
 ))
-df$SUBNUMERACY2 = revalue(factor(df$SUBNUMERACY2), c(
+df$SUBNUMERACY2 <- revalue(factor(df$SUBNUMERACY2), c(
   `-1` = "Refused",
   `1` = "1 - Always prefer words",
   `2` = "2",
@@ -375,7 +384,7 @@ df$SUBNUMERACY2 = revalue(factor(df$SUBNUMERACY2), c(
   `5` = "5",
   `6` = "6 - Always prefer numbers"
 ))
-df$SUBNUMERACY1 = revalue(factor(df$SUBNUMERACY1), c(
+df$SUBNUMERACY1 <- revalue(factor(df$SUBNUMERACY1), c(
   `-1` = "Refused",
   `1` = "1 - Not good at all",
   `2` = "2",
@@ -384,7 +393,7 @@ df$SUBNUMERACY1 = revalue(factor(df$SUBNUMERACY1), c(
   `5` = "5",
   `6` = "6 - Extremely good"
 ))
-df$CHANGEABLE = revalue(factor(df$CHANGEABLE), c(
+df$CHANGEABLE <- revalue(factor(df$CHANGEABLE), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -394,143 +403,143 @@ df$CHANGEABLE = revalue(factor(df$CHANGEABLE), c(
   `6` = "Agree",
   `7` = "Strongly agree"
 ))
-df$GOALCONF = revalue(factor(df$GOALCONF), c(
+df$GOALCONF <- revalue(factor(df$GOALCONF), c(
   `-1` = "Refused",
   `1` = "Not at all confident",
   `2` = "Not very confident",
   `3` = "Somewhat confident",
   `4` = "Very confident"
 ))
-df$FINKNOWL1 = revalue(factor(df$FINKNOWL1), c(
+df$FINKNOWL1 <- revalue(factor(df$FINKNOWL1), c(
   `-1` = "Refused",
   `1` = "More than $102",
   `2` = "Exactly $102",
   `3` = "Less than $102"
 ))
-df$FINKNOWL2 = revalue(factor(df$FINKNOWL2), c(
+df$FINKNOWL2 <- revalue(factor(df$FINKNOWL2), c(
   `-1` = "Refused",
   `1` = "More than today",
   `2` = "Exactly the same",
   `3` = "Less than today"
 ))
-df$FINKNOWL3 = revalue(factor(df$FINKNOWL3), c(
+df$FINKNOWL3 <- revalue(factor(df$FINKNOWL3), c(
   `-1` = "Refused",
   `1` = "True",
   `2` = "False"
 ))
-df$FK1correct = revalue(factor(df$FK1correct), c(
+df$FK1correct <- revalue(factor(df$FK1correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$FK2correct = revalue(factor(df$FK2correct), c(
+df$FK2correct <- revalue(factor(df$FK2correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$FK3correct = revalue(factor(df$FK3correct), c(
+df$FK3correct <- revalue(factor(df$FK3correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KHKNOWL1 = revalue(factor(df$KHKNOWL1), c(
+df$KHKNOWL1 <- revalue(factor(df$KHKNOWL1), c(
   `-1` = "Refused",
   `1` = "Savings accounts",
   `2` = "Bonds",
   `3` = "Stocks"
 ))
-df$KHKNOWL2 = revalue(factor(df$KHKNOWL2), c(
+df$KHKNOWL2 <- revalue(factor(df$KHKNOWL2), c(
   `-1` = "Refused",
   `1` = "Savings accounts",
   `2` = "Bonds",
   `3` = "Stocks"
 ))
-df$KHKNOWL3 = revalue(factor(df$KHKNOWL3), c(
+df$KHKNOWL3 <- revalue(factor(df$KHKNOWL3), c(
   `-1` = "Refused",
   `1` = "Increase",
   `2` = "Decrease",
   `3` = "Stay the same"
 ))
-df$KHKNOWL4 = revalue(factor(df$KHKNOWL4), c(
+df$KHKNOWL4 <- revalue(factor(df$KHKNOWL4), c(
   `-1` = "Refused",
   `1` = "True",
   `2` = "False"
 ))
-df$KHKNOWL5 = revalue(factor(df$KHKNOWL5), c(
+df$KHKNOWL5 <- revalue(factor(df$KHKNOWL5), c(
   `-1` = "Refused",
   `1` = "True",
   `2` = "False"
 ))
-df$KHKNOWL6 = revalue(factor(df$KHKNOWL6), c(
+df$KHKNOWL6 <- revalue(factor(df$KHKNOWL6), c(
   `-1` = "Refused",
   `1` = "True",
   `2` = "False"
 ))
-df$KHKNOWL7 = revalue(factor(df$KHKNOWL7), c(
+df$KHKNOWL7 <- revalue(factor(df$KHKNOWL7), c(
   `-1` = "Refused",
   `1` = "Less than 5 years",
   `2` = "Between 5 and 10 years",
   `3` = "Between 10 and 15 years",
   `4` = "Never, you will continue to be in debt"
 ))
-df$KHKNOWL8 = revalue(factor(df$KHKNOWL8), c(
+df$KHKNOWL8 <- revalue(factor(df$KHKNOWL8), c(
   `-1` = "Refused",
   `1` = "They will rise",
   `2` = "They will fall",
   `3` = "They will stay the same",
   `4` = "There is no relationship between bond prices and the interest rate"
 ))
-df$KHKNOWL9 = revalue(factor(df$KHKNOWL9), c(
+df$KHKNOWL9 <- revalue(factor(df$KHKNOWL9), c(
   `-1` = "Refused",
   `1` = "True",
   `2` = "False"
 ))
-df$KH1correct = revalue(factor(df$KH1correct), c(
+df$KH1correct <- revalue(factor(df$KH1correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH2correct = revalue(factor(df$KH2correct), c(
+df$KH2correct <- revalue(factor(df$KH2correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH3correct = revalue(factor(df$KH3correct), c(
+df$KH3correct <- revalue(factor(df$KH3correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH4correct = revalue(factor(df$KH4correct), c(
+df$KH4correct <- revalue(factor(df$KH4correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH5correct = revalue(factor(df$KH5correct), c(
+df$KH5correct <- revalue(factor(df$KH5correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH6correct = revalue(factor(df$KH6correct), c(
+df$KH6correct <- revalue(factor(df$KH6correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH7correct = revalue(factor(df$KH7correct), c(
+df$KH7correct <- revalue(factor(df$KH7correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH8correct = revalue(factor(df$KH8correct), c(
+df$KH8correct <- revalue(factor(df$KH8correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$KH9correct = revalue(factor(df$KH9correct), c(
+df$KH9correct <- revalue(factor(df$KH9correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$ENDSMEET = revalue(factor(df$ENDSMEET), c(
+df$ENDSMEET <- revalue(factor(df$ENDSMEET), c(
   `-1` = "Refused",
   `1` = "Not at all difficult",
   `2` = "Somewhat difficult",
   `3` = "Very difficult"
 ))
-df$HOUSING = revalue(factor(df$HOUSING), c(
+df$HOUSING <- revalue(factor(df$HOUSING), c(
   `-1` = "Refused",
   `1` = "I own my home",
   `2` = "I rent",
   `3` = "I do not currently own or rent"
 ))
-df$LIVINGARRANGEMENT = revalue(factor(df$LIVINGARRANGEMENT), c(
+df$LIVINGARRANGEMENT <- revalue(factor(df$LIVINGARRANGEMENT), c(
   `-1` = "Refused",
   `1` = "I am the only adult in the household",
   `2` = "I live with my spouse/partner/significant other",
@@ -538,7 +547,7 @@ df$LIVINGARRANGEMENT = revalue(factor(df$LIVINGARRANGEMENT), c(
   `4` = "I live with other family, friends, or roommates",
   `5` = "Some other arrangement"
 ))
-df$HOUSERANGES = revalue(factor(df$HOUSERANGES), c(
+df$HOUSERANGES <- revalue(factor(df$HOUSERANGES), c(
   `-1` = "Refused",
   `1` = "Less than $300",
   `2` = "$300-499",
@@ -550,11 +559,11 @@ df$HOUSERANGES = revalue(factor(df$HOUSERANGES), c(
   `98` = "I don't know",
   `99` = "Prefer not to say"
 ))
-df$IMPUTATION_FLAG = revalue(factor(df$IMPUTATION_FLAG), c(
+df$IMPUTATION_FLAG <- revalue(factor(df$IMPUTATION_FLAG), c(
   `0` = "Not imputed",
   `1` = "Imputed"
 ))
-df$VALUERANGES = revalue(factor(df$VALUERANGES), c(
+df$VALUERANGES <- revalue(factor(df$VALUERANGES), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `1` = "Less than $150,000",
@@ -564,7 +573,7 @@ df$VALUERANGES = revalue(factor(df$VALUERANGES), c(
   `98` = "I don't know",
   `99` = "Prefer not to say"
 ))
-df$MORTGAGE = revalue(factor(df$MORTGAGE), c(
+df$MORTGAGE <- revalue(factor(df$MORTGAGE), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `1` = "Less than $50,000",
@@ -573,7 +582,7 @@ df$MORTGAGE = revalue(factor(df$MORTGAGE), c(
   `98` = "I don't know",
   `99` = "Prefer not to say"
 ))
-df$SAVINGSRANGES = revalue(factor(df$SAVINGSRANGES), c(
+df$SAVINGSRANGES <- revalue(factor(df$SAVINGSRANGES), c(
   `-1` = "Refused",
   `1` = "0",
   `2` = "$1-99",
@@ -585,155 +594,155 @@ df$SAVINGSRANGES = revalue(factor(df$SAVINGSRANGES), c(
   `98` = "I don't know",
   `99` = "Prefer not to say"
 ))
-df$PRODHAVE_1 = revalue(factor(df$PRODHAVE_1), c(
+df$PRODHAVE_1 <- revalue(factor(df$PRODHAVE_1), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_2 = revalue(factor(df$PRODHAVE_2), c(
+df$PRODHAVE_2 <- revalue(factor(df$PRODHAVE_2), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_3 = revalue(factor(df$PRODHAVE_3), c(
+df$PRODHAVE_3 <- revalue(factor(df$PRODHAVE_3), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_4 = revalue(factor(df$PRODHAVE_4), c(
+df$PRODHAVE_4 <- revalue(factor(df$PRODHAVE_4), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_5 = revalue(factor(df$PRODHAVE_5), c(
+df$PRODHAVE_5 <- revalue(factor(df$PRODHAVE_5), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_6 = revalue(factor(df$PRODHAVE_6), c(
+df$PRODHAVE_6 <- revalue(factor(df$PRODHAVE_6), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_7 = revalue(factor(df$PRODHAVE_7), c(
+df$PRODHAVE_7 <- revalue(factor(df$PRODHAVE_7), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_8 = revalue(factor(df$PRODHAVE_8), c(
+df$PRODHAVE_8 <- revalue(factor(df$PRODHAVE_8), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODHAVE_9 = revalue(factor(df$PRODHAVE_9), c(
+df$PRODHAVE_9 <- revalue(factor(df$PRODHAVE_9), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_1 = revalue(factor(df$PRODUSE_1), c(
+df$PRODUSE_1 <- revalue(factor(df$PRODUSE_1), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_2 = revalue(factor(df$PRODUSE_2), c(
+df$PRODUSE_2 <- revalue(factor(df$PRODUSE_2), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_3 = revalue(factor(df$PRODUSE_3), c(
+df$PRODUSE_3 <- revalue(factor(df$PRODUSE_3), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_4 = revalue(factor(df$PRODUSE_4), c(
+df$PRODUSE_4 <- revalue(factor(df$PRODUSE_4), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_5 = revalue(factor(df$PRODUSE_5), c(
+df$PRODUSE_5 <- revalue(factor(df$PRODUSE_5), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PRODUSE_6 = revalue(factor(df$PRODUSE_6), c(
+df$PRODUSE_6 <- revalue(factor(df$PRODUSE_6), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$CONSPROTECT1 = revalue(factor(df$CONSPROTECT1), c(
+df$CONSPROTECT1 <- revalue(factor(df$CONSPROTECT1), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Rarely",
   `3` = "Sometimes",
   `4` = "Often"
 ))
-df$CONSPROTECT2 = revalue(factor(df$CONSPROTECT2), c(
+df$CONSPROTECT2 <- revalue(factor(df$CONSPROTECT2), c(
   `-1` = "Refused",
   `1` = "Not at all familiar",
   `2` = "Somewhat familiar",
   `3` = "Very familiar"
 ))
-df$CONSPROTECT3 = revalue(factor(df$CONSPROTECT3), c(
+df$CONSPROTECT3 <- revalue(factor(df$CONSPROTECT3), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$EARNERS = revalue(factor(df$EARNERS), c(
+df$EARNERS <- revalue(factor(df$EARNERS), c(
   `-1` = "Refused",
   `1` = "One",
   `2` = "Two",
   `3` = "More than two"
 ))
-df$VOLATILITY = revalue(factor(df$VOLATILITY), c(
+df$VOLATILITY <- revalue(factor(df$VOLATILITY), c(
   `-1` = "Refused",
   `1` = "Roughly the same each month",
   `2` = "Roughly the same most months, but some unusually high or low months during the year",
   `3` = "Often varies quite a bit from one month to the next"
 ))
-df$SNAP = revalue(factor(df$SNAP), c(
+df$SNAP <- revalue(factor(df$SNAP), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes",
   `8` = "Not sure"
 ))
-df$MATHARDSHIP_1 = revalue(factor(df$MATHARDSHIP_1), c(
+df$MATHARDSHIP_1 <- revalue(factor(df$MATHARDSHIP_1), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$MATHARDSHIP_2 = revalue(factor(df$MATHARDSHIP_2), c(
+df$MATHARDSHIP_2 <- revalue(factor(df$MATHARDSHIP_2), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$MATHARDSHIP_3 = revalue(factor(df$MATHARDSHIP_3), c(
+df$MATHARDSHIP_3 <- revalue(factor(df$MATHARDSHIP_3), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$MATHARDSHIP_4 = revalue(factor(df$MATHARDSHIP_4), c(
+df$MATHARDSHIP_4 <- revalue(factor(df$MATHARDSHIP_4), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$MATHARDSHIP_5 = revalue(factor(df$MATHARDSHIP_5), c(
+df$MATHARDSHIP_5 <- revalue(factor(df$MATHARDSHIP_5), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$MATHARDSHIP_6 = revalue(factor(df$MATHARDSHIP_6), c(
+df$MATHARDSHIP_6 <- revalue(factor(df$MATHARDSHIP_6), c(
   `-1` = "Refused",
   `1` = "Never",
   `2` = "Sometimes",
   `3` = "Often"
 ))
-df$COLLECT = revalue(factor(df$COLLECT), c(
+df$COLLECT <- revalue(factor(df$COLLECT), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes",
   `8` = "Not sure"
 ))
-df$REJECTED_1 = revalue(factor(df$REJECTED_1), c(
+df$REJECTED_1 <- revalue(factor(df$REJECTED_1), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$REJECTED_2 = revalue(factor(df$REJECTED_2), c(
+df$REJECTED_2 <- revalue(factor(df$REJECTED_2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$ABSORBSHOCK = revalue(factor(df$ABSORBSHOCK), c(
+df$ABSORBSHOCK <- revalue(factor(df$ABSORBSHOCK), c(
   `-1` = "Refused",
   `1` = "I am certain I could not come up with $2,000",
   `2` = "I could probably not come up with $2,000",
@@ -741,121 +750,121 @@ df$ABSORBSHOCK = revalue(factor(df$ABSORBSHOCK), c(
   `4` = "I am certain I could come up with the full $2,000",
   `8` = "I don't know"
 ))
-df$BENEFITS_1 = revalue(factor(df$BENEFITS_1), c(
+df$BENEFITS_1 <- revalue(factor(df$BENEFITS_1), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$BENEFITS_2 = revalue(factor(df$BENEFITS_2), c(
+df$BENEFITS_2 <- revalue(factor(df$BENEFITS_2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$BENEFITS_3 = revalue(factor(df$BENEFITS_3), c(
+df$BENEFITS_3 <- revalue(factor(df$BENEFITS_3), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$BENEFITS_4 = revalue(factor(df$BENEFITS_4), c(
+df$BENEFITS_4 <- revalue(factor(df$BENEFITS_4), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$BENEFITS_5 = revalue(factor(df$BENEFITS_5), c(
+df$BENEFITS_5 <- revalue(factor(df$BENEFITS_5), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FRAUD2 = revalue(factor(df$FRAUD2), c(
+df$FRAUD2 <- revalue(factor(df$FRAUD2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes",
   `8` = "Not sure"
 ))
-df$COVERCOSTS = revalue(factor(df$COVERCOSTS), c(
+df$COVERCOSTS <- revalue(factor(df$COVERCOSTS), c(
   `-1` = "Refused",
   `1` = "Use savings or sell something you own",
   `2` = "Cut back or do without",
   `3` = "Earn more money",
   `4` = "Borrow money"
 ))
-df$BORROW_1 = revalue(factor(df$BORROW_1), c(
+df$BORROW_1 <- revalue(factor(df$BORROW_1), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$BORROW_2 = revalue(factor(df$BORROW_2), c(
+df$BORROW_2 <- revalue(factor(df$BORROW_2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_1 = revalue(factor(df$SHOCKS_1), c(
+df$SHOCKS_1 <- revalue(factor(df$SHOCKS_1), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_2 = revalue(factor(df$SHOCKS_2), c(
+df$SHOCKS_2 <- revalue(factor(df$SHOCKS_2), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_3 = revalue(factor(df$SHOCKS_3), c(
+df$SHOCKS_3 <- revalue(factor(df$SHOCKS_3), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_4 = revalue(factor(df$SHOCKS_4), c(
+df$SHOCKS_4 <- revalue(factor(df$SHOCKS_4), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_5 = revalue(factor(df$SHOCKS_5), c(
+df$SHOCKS_5 <- revalue(factor(df$SHOCKS_5), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_6 = revalue(factor(df$SHOCKS_6), c(
+df$SHOCKS_6 <- revalue(factor(df$SHOCKS_6), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_7 = revalue(factor(df$SHOCKS_7), c(
+df$SHOCKS_7 <- revalue(factor(df$SHOCKS_7), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_8 = revalue(factor(df$SHOCKS_8), c(
+df$SHOCKS_8 <- revalue(factor(df$SHOCKS_8), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_9 = revalue(factor(df$SHOCKS_9), c(
+df$SHOCKS_9 <- revalue(factor(df$SHOCKS_9), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_10 = revalue(factor(df$SHOCKS_10), c(
+df$SHOCKS_10 <- revalue(factor(df$SHOCKS_10), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_11 = revalue(factor(df$SHOCKS_11), c(
+df$SHOCKS_11 <- revalue(factor(df$SHOCKS_11), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$SHOCKS_12 = revalue(factor(df$SHOCKS_12), c(
+df$SHOCKS_12 <- revalue(factor(df$SHOCKS_12), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$MANAGE2 = revalue(factor(df$MANAGE2), c(
+df$MANAGE2 <- revalue(factor(df$MANAGE2), c(
   `-1` = "Refused",
   `1` = "Someone else takes care of all or most money matters in my household.",
   `2` = "Someone else and I take care of money matters in my household about the same.",
   `3` = "I take care of all or most money matters in my household."
 ))
-df$PAIDHELP = revalue(factor(df$PAIDHELP), c(
+df$PAIDHELP <- revalue(factor(df$PAIDHELP), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$HSLOC = revalue(factor(df$HSLOC), c(
+df$HSLOC <- revalue(factor(df$HSLOC), c(
   `-1` = "Refused",
   `1` = "U.S. and territories",
   `2` = "Outside the U.S.",
   `8` = "I can't recall"
 ))
-df$PAREDUC = revalue(factor(df$PAREDUC), c(
+df$PAREDUC <- revalue(factor(df$PAREDUC), c(
   `-1` = "Refused",
   `1` = "Less than high school",
   `2` = "High school degree/GED",
@@ -863,56 +872,56 @@ df$PAREDUC = revalue(factor(df$PAREDUC), c(
   `4` = "Bachelor's degree",
   `5` = "Graduate/professional degree"
 ))
-df$FINSOC2_1 = revalue(factor(df$FINSOC2_1), c(
+df$FINSOC2_1 <- revalue(factor(df$FINSOC2_1), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_2 = revalue(factor(df$FINSOC2_2), c(
+df$FINSOC2_2 <- revalue(factor(df$FINSOC2_2), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_3 = revalue(factor(df$FINSOC2_3), c(
+df$FINSOC2_3 <- revalue(factor(df$FINSOC2_3), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_4 = revalue(factor(df$FINSOC2_4), c(
+df$FINSOC2_4 <- revalue(factor(df$FINSOC2_4), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_5 = revalue(factor(df$FINSOC2_5), c(
+df$FINSOC2_5 <- revalue(factor(df$FINSOC2_5), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_6 = revalue(factor(df$FINSOC2_6), c(
+df$FINSOC2_6 <- revalue(factor(df$FINSOC2_6), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$FINSOC2_7 = revalue(factor(df$FINSOC2_7), c(
+df$FINSOC2_7 <- revalue(factor(df$FINSOC2_7), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$OBJNUMERACY1 = revalue(factor(df$OBJNUMERACY1), c(
+df$OBJNUMERACY1 <- revalue(factor(df$OBJNUMERACY1), c(
   `-1` = "Refused",
   `1` = "1%",
   `2` = "10%",
   `3` = "5%"
 ))
-df$ON2correct = revalue(factor(df$ON2correct), c(
+df$ON2correct <- revalue(factor(df$ON2correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$ON1correct = revalue(factor(df$ON1correct), c(
+df$ON1correct <- revalue(factor(df$ON1correct), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$MATERIALISM_1 = revalue(factor(df$MATERIALISM_1), c(
+df$MATERIALISM_1 <- revalue(factor(df$MATERIALISM_1), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -920,7 +929,7 @@ df$MATERIALISM_1 = revalue(factor(df$MATERIALISM_1), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$MATERIALISM_2 = revalue(factor(df$MATERIALISM_2), c(
+df$MATERIALISM_2 <- revalue(factor(df$MATERIALISM_2), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -928,7 +937,7 @@ df$MATERIALISM_2 = revalue(factor(df$MATERIALISM_2), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$MATERIALISM_3 = revalue(factor(df$MATERIALISM_3), c(
+df$MATERIALISM_3 <- revalue(factor(df$MATERIALISM_3), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -936,10 +945,10 @@ df$MATERIALISM_3 = revalue(factor(df$MATERIALISM_3), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$CONNECT = revalue(factor(df$CONNECT), c(
+df$CONNECT <- revalue(factor(df$CONNECT), c(
   `-1` = "Refused"
 ))
-df$HEALTH = revalue(factor(df$HEALTH), c(
+df$HEALTH <- revalue(factor(df$HEALTH), c(
   `-1` = "Refused",
   `1` = "Poor",
   `2` = "Fair",
@@ -947,7 +956,7 @@ df$HEALTH = revalue(factor(df$HEALTH), c(
   `4` = "Very good",
   `5` = "Excellent"
 ))
-df$SCFHORIZON = revalue(factor(df$SCFHORIZON), c(
+df$SCFHORIZON <- revalue(factor(df$SCFHORIZON), c(
   `-1` = "Refused",
   `1` = "The next few months",
   `2` = "The next year",
@@ -955,17 +964,17 @@ df$SCFHORIZON = revalue(factor(df$SCFHORIZON), c(
   `4` = "The next 5 to 10 years",
   `5` = "Longer than 10 years"
 ))
-df$DISCOUNT = revalue(factor(df$DISCOUNT), c(
+df$DISCOUNT <- revalue(factor(df$DISCOUNT), c(
   `-1` = "Refused",
   `1` = "$816 now",
   `2` = "$860 in three months"
 ))
-df$MEMLOSS = revalue(factor(df$MEMLOSS), c(
+df$MEMLOSS <- revalue(factor(df$MEMLOSS), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$DISTRESS = revalue(factor(df$DISTRESS), c(
+df$DISTRESS <- revalue(factor(df$DISTRESS), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -973,28 +982,28 @@ df$DISTRESS = revalue(factor(df$DISTRESS), c(
   `4` = "Agree",
   `5` = "Strongly agree"
 ))
-df$SELFCONTROL_1 = revalue(factor(df$SELFCONTROL_1), c(
+df$SELFCONTROL_1 <- revalue(factor(df$SELFCONTROL_1), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Not very well",
   `3` = "Very well",
   `4` = "Completely well"
 ))
-df$SELFCONTROL_2 = revalue(factor(df$SELFCONTROL_2), c(
+df$SELFCONTROL_2 <- revalue(factor(df$SELFCONTROL_2), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Not very well",
   `3` = "Very well",
   `4` = "Completely well"
 ))
-df$SELFCONTROL_3 = revalue(factor(df$SELFCONTROL_3), c(
+df$SELFCONTROL_3 <- revalue(factor(df$SELFCONTROL_3), c(
   `-1` = "Refused",
   `1` = "Not at all",
   `2` = "Not very well",
   `3` = "Very well",
   `4` = "Completely well"
 ))
-df$OUTLOOK_1 = revalue(factor(df$OUTLOOK_1), c(
+df$OUTLOOK_1 <- revalue(factor(df$OUTLOOK_1), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Somewhat disagree",
@@ -1002,7 +1011,7 @@ df$OUTLOOK_1 = revalue(factor(df$OUTLOOK_1), c(
   `4` = "Somewhat agree",
   `5` = "Strongly agree"
 ))
-df$OUTLOOK_2 = revalue(factor(df$OUTLOOK_2), c(
+df$OUTLOOK_2 <- revalue(factor(df$OUTLOOK_2), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Somewhat disagree",
@@ -1010,47 +1019,47 @@ df$OUTLOOK_2 = revalue(factor(df$OUTLOOK_2), c(
   `4` = "Somewhat agree",
   `5` = "Strongly agree"
 ))
-df$INTERCONNECTIONS_1 = revalue(factor(df$INTERCONNECTIONS_1), c(
+df$INTERCONNECTIONS_1 <- revalue(factor(df$INTERCONNECTIONS_1), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_2 = revalue(factor(df$INTERCONNECTIONS_2), c(
+df$INTERCONNECTIONS_2 <- revalue(factor(df$INTERCONNECTIONS_2), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_3 = revalue(factor(df$INTERCONNECTIONS_3), c(
+df$INTERCONNECTIONS_3 <- revalue(factor(df$INTERCONNECTIONS_3), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_4 = revalue(factor(df$INTERCONNECTIONS_4), c(
+df$INTERCONNECTIONS_4 <- revalue(factor(df$INTERCONNECTIONS_4), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_5 = revalue(factor(df$INTERCONNECTIONS_5), c(
+df$INTERCONNECTIONS_5 <- revalue(factor(df$INTERCONNECTIONS_5), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_6 = revalue(factor(df$INTERCONNECTIONS_6), c(
+df$INTERCONNECTIONS_6 <- revalue(factor(df$INTERCONNECTIONS_6), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_7 = revalue(factor(df$INTERCONNECTIONS_7), c(
+df$INTERCONNECTIONS_7 <- revalue(factor(df$INTERCONNECTIONS_7), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_8 = revalue(factor(df$INTERCONNECTIONS_8), c(
+df$INTERCONNECTIONS_8 <- revalue(factor(df$INTERCONNECTIONS_8), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_9 = revalue(factor(df$INTERCONNECTIONS_9), c(
+df$INTERCONNECTIONS_9 <- revalue(factor(df$INTERCONNECTIONS_9), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$INTERCONNECTIONS_10 = revalue(factor(df$INTERCONNECTIONS_10), c(
+df$INTERCONNECTIONS_10 <- revalue(factor(df$INTERCONNECTIONS_10), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$PEM = revalue(factor(df$PEM), c(
+df$PEM <- revalue(factor(df$PEM), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -1060,20 +1069,20 @@ df$PEM = revalue(factor(df$PEM), c(
   `6` = "Agree",
   `7` = "Strongly agree"
 ))
-df$HOUSESAT = revalue(factor(df$HOUSESAT), c(
+df$HOUSESAT <- revalue(factor(df$HOUSESAT), c(
   `-1` = "Refused",
   `1` = "Not at all satisfied",
   `2` = "Not very satisfied",
   `3` = "Somewhat satisfied",
   `4` = "Very satisfied"
 ))
-df$SOCSEC1 = revalue(factor(df$SOCSEC1), c(
+df$SOCSEC1 <- revalue(factor(df$SOCSEC1), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$SOCSEC2 = revalue(factor(df$SOCSEC2), c(
+df$SOCSEC2 <- revalue(factor(df$SOCSEC2), c(
   `-3` = "Invalid Response",
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
@@ -1087,7 +1096,7 @@ df$SOCSEC2 = revalue(factor(df$SOCSEC2), c(
   `69` = "69",
   `70` = "70 and above"
 ))
-df$SOCSEC3 = revalue(factor(df$SOCSEC3), c(
+df$SOCSEC3 <- revalue(factor(df$SOCSEC3), c(
   `-3` = "Invalid Response",
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
@@ -1103,7 +1112,7 @@ df$SOCSEC3 = revalue(factor(df$SOCSEC3), c(
   `70` = "70",
   `71` = "71 and above"
 ))
-df$LIFEEXPECT = revalue(factor(df$LIFEEXPECT), c(
+df$LIFEEXPECT <- revalue(factor(df$LIFEEXPECT), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `0` = "0",
@@ -1186,7 +1195,7 @@ df$LIFEEXPECT = revalue(factor(df$LIFEEXPECT), c(
   `99` = "99",
   `100` = "100"
 ))
-df$HHEDUC = revalue(factor(df$HHEDUC), c(
+df$HHEDUC <- revalue(factor(df$HHEDUC), c(
   `-1` = "Refused",
   `1` = "Less than high school",
   `2` = "High school degree/GED",
@@ -1194,37 +1203,37 @@ df$HHEDUC = revalue(factor(df$HHEDUC), c(
   `4` = "Bachelor's degree",
   `5` = "Graduate/professional degree"
 ))
-df$KIDS_NoChildren = revalue(factor(df$KIDS_NoChildren), c(
+df$KIDS_NoChildren <- revalue(factor(df$KIDS_NoChildren), c(
   `-1` = "Refused",
   `0` = "Respondent financially supports children",
   `1` = "I have no children that I financially support"
 ))
-df$KIDS_1 = revalue(factor(df$KIDS_1), c(
+df$KIDS_1 <- revalue(factor(df$KIDS_1), c(
   `-1` = "Refused",
   `0` = "0",
   `1` = "1",
   `2` = "2+"
 ))
-df$KIDS_2 = revalue(factor(df$KIDS_2), c(
+df$KIDS_2 <- revalue(factor(df$KIDS_2), c(
   `-3` = "Invalid Response",
   `-1` = "Refused",
   `0` = "0",
   `1` = "1",
   `2` = "2+"
 ))
-df$KIDS_3 = revalue(factor(df$KIDS_3), c(
+df$KIDS_3 <- revalue(factor(df$KIDS_3), c(
   `-1` = "Refused",
   `0` = "0",
   `1` = "1",
   `2` = "2+"
 ))
-df$KIDS_4 = revalue(factor(df$KIDS_4), c(
+df$KIDS_4 <- revalue(factor(df$KIDS_4), c(
   `-1` = "Refused",
   `0` = "0",
   `1` = "1",
   `2` = "2+"
 ))
-df$EMPLOY = revalue(factor(df$EMPLOY), c(
+df$EMPLOY <- revalue(factor(df$EMPLOY), c(
   `1` = "Self-employed",
   `2` = "Work full-time for an employer or the military",
   `3` = "Work part-time for an employer or the military",
@@ -1235,55 +1244,55 @@ df$EMPLOY = revalue(factor(df$EMPLOY), c(
   `8` = "Retired",
   `99` = "Refused"
 ))
-df$EMPLOY1_1 = revalue(factor(df$EMPLOY1_1), c(
+df$EMPLOY1_1 <- revalue(factor(df$EMPLOY1_1), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_2 = revalue(factor(df$EMPLOY1_2), c(
+df$EMPLOY1_2 <- revalue(factor(df$EMPLOY1_2), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_3 = revalue(factor(df$EMPLOY1_3), c(
+df$EMPLOY1_3 <- revalue(factor(df$EMPLOY1_3), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_4 = revalue(factor(df$EMPLOY1_4), c(
+df$EMPLOY1_4 <- revalue(factor(df$EMPLOY1_4), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_5 = revalue(factor(df$EMPLOY1_5), c(
+df$EMPLOY1_5 <- revalue(factor(df$EMPLOY1_5), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_6 = revalue(factor(df$EMPLOY1_6), c(
+df$EMPLOY1_6 <- revalue(factor(df$EMPLOY1_6), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_7 = revalue(factor(df$EMPLOY1_7), c(
+df$EMPLOY1_7 <- revalue(factor(df$EMPLOY1_7), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_8 = revalue(factor(df$EMPLOY1_8), c(
+df$EMPLOY1_8 <- revalue(factor(df$EMPLOY1_8), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$EMPLOY1_9 = revalue(factor(df$EMPLOY1_9), c(
+df$EMPLOY1_9 <- revalue(factor(df$EMPLOY1_9), c(
   `0` = "No",
   `1` = "Yes"
 ))
-df$RETIRE = revalue(factor(df$RETIRE), c(
+df$RETIRE <- revalue(factor(df$RETIRE), c(
   `-2` = "Question not asked because respondent not in item base",
   `-1` = "Refused",
   `1` = "Earlier than planned",
   `2` = "About when planned",
   `3` = "Later than planned"
 ))
-df$MILITARY = revalue(factor(df$MILITARY), c(
+df$MILITARY <- revalue(factor(df$MILITARY), c(
   `-1` = "Refused",
   `0` = "No",
   `1` = "Yes"
 ))
-df$Military_Status = revalue(factor(df$Military_Status), c(
+df$Military_Status <- revalue(factor(df$Military_Status), c(
   `-1` = "Refused",
   `1` = "Active military (active, reserve, natl guard)",
   `2` = "Veteran (veteran or retired)",
@@ -1291,7 +1300,7 @@ df$Military_Status = revalue(factor(df$Military_Status), c(
   `4` = "Spouse/dependent Veteran",
   `5` = "Neither Active nor Veteran"
 ))
-df$agecat = revalue(factor(df$agecat), c(
+df$agecat <- revalue(factor(df$agecat), c(
   `1` = "18-24",
   `2` = "25-34",
   `3` = "35-44",
@@ -1301,37 +1310,37 @@ df$agecat = revalue(factor(df$agecat), c(
   `7` = "70-74",
   `8` = "75+"
 ))
-df$generation = revalue(factor(df$generation), c(
+df$generation <- revalue(factor(df$generation), c(
   `1` = "Pre-Boomer",
   `2` = "Boomer",
   `3` = "Gen X",
   `4` = "Millennial"
 ))
-df$PPEDUC = revalue(factor(df$PPEDUC), c(
+df$PPEDUC <- revalue(factor(df$PPEDUC), c(
   `1` = "Less than high school",
   `2` = "High school degree/GED",
   `3` = "Some college/Associate",
   `4` = "Bachelor's degree",
   `5` = "Graduate/professional degree"
 ))
-df$PPETHM = revalue(factor(df$PPETHM), c(
+df$PPETHM <- revalue(factor(df$PPETHM), c(
   `1` = "White, Non-Hispanic",
   `2` = "Black, Non-Hispanic",
   `3` = "Other, Non-Hispanic",
   `4` = "Hispanic"
 ))
-df$PPGENDER = revalue(factor(df$PPGENDER), c(
+df$PPGENDER <- revalue(factor(df$PPGENDER), c(
   `1` = "Male",
   `2` = "Female"
 ))
-df$PPHHSIZE = revalue(factor(df$PPHHSIZE), c(
+df$PPHHSIZE <- revalue(factor(df$PPHHSIZE), c(
   `1` = "1",
   `2` = "2",
   `3` = "3",
   `4` = "4",
   `5` = "5+"
 ))
-df$PPINCIMP = revalue(factor(df$PPINCIMP), c(
+df$PPINCIMP <- revalue(factor(df$PPINCIMP), c(
   `1` = "Less than $20,000",
   `2` = "$20,000 to $29,999",
   `3` = "$30,000 to $39,999",
@@ -1342,24 +1351,24 @@ df$PPINCIMP = revalue(factor(df$PPINCIMP), c(
   `8` = "$100,000 to $149,999",
   `9` = "$150,000 or more"
 ))
-df$PPMARIT = revalue(factor(df$PPMARIT), c(
+df$PPMARIT <- revalue(factor(df$PPMARIT), c(
   `1` = "Married",
   `2` = "Widowed",
   `3` = "Divorced/Separated",
   `4` = "Never married",
   `5` = "Living with partner"
 ))
-df$PPMSACAT = revalue(factor(df$PPMSACAT), c(
+df$PPMSACAT <- revalue(factor(df$PPMSACAT), c(
   `0` = "Non-Metro",
   `1` = "Metro"
 ))
-df$PPREG4 = revalue(factor(df$PPREG4), c(
+df$PPREG4 <- revalue(factor(df$PPREG4), c(
   `1` = "Northeast",
   `2` = "Midwest",
   `3` = "South",
   `4` = "West"
 ))
-df$PPREG9 = revalue(factor(df$PPREG9), c(
+df$PPREG9 <- revalue(factor(df$PPREG9), c(
   `1` = "New England",
   `2` = "Mid-Atlantic",
   `3` = "East-North Central",
@@ -1370,32 +1379,39 @@ df$PPREG9 = revalue(factor(df$PPREG9), c(
   `8` = "Mountain",
   `9` = "Pacific"
 ))
-df$PPT01 = revalue(factor(df$PPT01), c(
+df$PPT01 <- revalue(factor(df$PPT01), c(
   `0` = "0",
   `1` = "1+"
 ))
-df$PPT25 = revalue(factor(df$PPT25), c(
+df$PPT25 <- revalue(factor(df$PPT25), c(
   `0` = "0",
   `1` = "1+"
 ))
-df$PPT612 = revalue(factor(df$PPT612), c(
+df$PPT612 <- revalue(factor(df$PPT612), c(
   `0` = "0",
   `1` = "1+"
 ))
-df$PPT1317 = revalue(factor(df$PPT1317), c(
+df$PPT1317 <- revalue(factor(df$PPT1317), c(
   `0` = "0",
   `1` = "1+"
 ))
-df$PPT18OV = revalue(factor(df$PPT18OV), c(
+df$PPT18OV <- revalue(factor(df$PPT18OV), c(
   `1` = "1",
   `2` = "2",
   `3` = "3",
   `4` = "4+"
 ))
-df$PCTLT200FPL = revalue(factor(df$PCTLT200FPL), c(
+df$PCTLT200FPL <- revalue(factor(df$PCTLT200FPL), c(
   `-5` = "County is not known",
   `0` = "Less than 40% of county population below 200% of poverty level",
   `1` = "40% or more of county population below 200% of poverty level"
 ))
 
-write_parquet(df, "data/02-analysis_data/NFWBS_analysis_data.parquet")
+# Filter out rows where FWBscore or FSscore is "refused"
+data_cleaned <- subset(df, FWBscore != "refused" & FSscore != "refused")
+
+# Convert FWBscore and FSscore to numeric
+data_cleaned$FWBscore <- as.numeric(data_cleaned$FWBscore)
+data_cleaned$FSscore <- as.numeric(data_cleaned$FSscore)
+
+write_parquet(data_cleaned, "data/02-analysis_data/NFWBS_analysis_data.parquet")

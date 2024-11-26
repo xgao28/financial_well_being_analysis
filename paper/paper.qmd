@@ -19,24 +19,136 @@ bibliography: references.bib
 
 library(tidyverse)
 library(arrow)
+library(ggplot2)
 data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
 ```
 
 
-
-
-
-
-
 # Introduction
+
+
 
 # Data
 
-```{r}
 
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(skimr)
+skim_summary <- data %>%
+  select(-PUF_ID) %>%  # Remove 'PUF_ID' column
+  select(where(is.numeric)) %>%  # Keep only numeric columns
+  skim()
+
+# Round the numeric columns of the skim summary
+skim_summary %>%
+  mutate_if(is.numeric, ~round(., 3)) %>%
+  select(-complete_rate, -n_missing, -numeric.hist) %>% 
+  print()
+```
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+data_cleaned <- data[, !names(data) %in% "puf_id"]
 ```
 
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+data_long <- data_cleaned %>%
+  pivot_longer(
+    cols = c(FWBscore, FSscore, LMscore, KHscore),
+    names_to = "ScoreType", values_to = "Value"
+  )
+
+# Plot using ggplot2
+ggplot(data_long, aes(x = Value)) +
+  geom_histogram(binwidth = 1, color = "black", fill = "skyblue", alpha = 0.7) +
+  facet_wrap(~ScoreType, scales = "free", ncol = 2) +
+  labs(
+    title = "Histograms of Financial Scores",
+    caption = "FWBscore: Financial Well-being Scale\nFSscore: Financial Skill Scale\nLMscore: Lusardi and Mitchell Financial Knowledge Scale\nKHscore: Knoll and Houts Financial Knowledge Scale",
+    x = "Score Value",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+The composition of finalwt remains on investigation.
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+ggplot(data_cleaned, aes(x = finalwt)) +
+  geom_density(color = "black", fill = "skyblue", alpha = 0.7) +
+  labs(
+    title = "Distribution of Final Weight (finalwt)",
+    x = "Final Weight (finalwt)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+
 # Model
+
+# Linear Regression Model
+
+The linear regression model can be expressed mathematically as:
+
+$$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_i + \beta_3 \cdot \text{FWBscore}_i + \beta_4 \cdot \text{FSscore}_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma^{2})$$
+
+
+### Model Components
+- $y_i$: The dependent variable, $\text{finalwt}_i$, for observation $i$.
+- $\beta_0$: The intercept term (constant in the model).
+- $\beta_1, \beta_2, \beta_3, \beta_4$: The slopes (coefficients) of the respective predictor variables:
+  - $\text{LMscore}_i$: Lusardi and Mitchell financial knowledge scale score.
+  - $\text{KHscore}_i$: Knoll and Houts financial knowledge scale score.
+  - $\text{FWBscore}_i$: Financial well-being scale score.
+  - $\text{FSscore}_i$: Financial skill scale score.
+
+
+
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+library(knitr)
+# Build a linear regression model
+# Assuming other columns in the dataset are predictors
+model <- lm(finalwt ~ LMscore + KHscore + FWBscore + FSscore, data = data_cleaned)
+
+# Display the summary of the model
+model_summary <- summary(model)
+
+# Create a data frame with key statistics
+lm_results <- data.frame(
+  Term = rownames(model_summary$coefficients),
+  Estimate = model_summary$coefficients[, "Estimate"],
+  Std_Error = model_summary$coefficients[, "Std. Error"],
+  t_value = model_summary$coefficients[, "t value"],
+  p_value = model_summary$coefficients[, "Pr(>|t|)"]
+)
+
+# Round values for better readability
+lm_results[, -1] <- round(lm_results[, -1], 3)
+
+# Display the table using knitr::kable
+kable(
+  lm_results,
+  caption = "Summary of Linear Regression Model"
+)
+```
+
 
 # Results
 
@@ -48,6 +160,23 @@ data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
 
 ## Surveys, sampling, and observational data
 
+## Acknowledgements
+
+We would like to express our gratitude to the developers and contributors of R [@citeR] as well as several R packages that were essential for the analysis and visualization of the data in this report. The following R packages provided indispensable tools and functionalities:
+
+- `tidyverse` [@tidyverse]: A collection of R packages designed for data science, including dplyr, ggplot2, readr, purrr, and others, which greatly facilitated data manipulation, analysis, and visualization.
+
+- `ggplot2` [@ggplot2]: An implementation of the Grammar of Graphics, which allowed us to create complex and aesthetically pleasing visualizations with ease.
+
+- `knitr` [@knitr]: This package enabled us to perform data demonstration with tables.
+
+- `styler` [@styler]: This package is helpful for styling the code.
+
+- `arrow` [@arrow]: This package provides a convenient and efficient way to work with parquet format.
+
+We are grateful to the Consumer Financial Protection Bureau (CFPB) for conducting the Financial Well-Being Survey [@cfpb_fwb_survey] and making the data publicly available. Their dedication to collecting and sharing such vital information significantly contributes to research on financial well-being.
+
+Finally, we would like to thank all those who contributed to the development and maintenance of the R programming language and its ecosystem, as well as the broader open-source community, whose efforts make such research possible.
 
 # References
 
