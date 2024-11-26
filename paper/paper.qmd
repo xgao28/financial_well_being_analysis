@@ -1,0 +1,54 @@
+---
+title: "financial Well Being Analysis"
+# subtitle: "My subtitle if needed"
+author: 
+  - Xinxiang Gao
+thanks: "Code and data are available at: [https://github.com/xgao28/financial_well_being_analysis](https://github.com/xgao28/financial_well_being_analysis)."
+date: today
+date-format: long
+abstract: "This should be an abstract. The report is still being finalized."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(arrow)
+data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
+```
+
+
+
+
+
+
+
+# Introduction
+
+# Data
+
+```{r}
+
+```
+
+# Model
+
+# Results
+
+# Discussion
+
+# Appendix
+
+## Data cleaning
+
+## Surveys, sampling, and observational data
+
+
+# References
+
+
