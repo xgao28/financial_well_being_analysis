@@ -3,7 +3,7 @@
 
 ## Overview
 
-This repo provides an analysis towards Financial well-being in the United States of America in 2017.
+This research project investigates the key determinants of financial well-being using data from the Consumer Financial Protection Bureau's (CFPB) National Financial Well-Being Survey in 2017. Through comprehensive regression analysis of over 6,000 respondents, we examine how psychological distress, demographic characteristics, and financial literacy influence financial well-being scores. Our findings reveal that psychological distress has the strongest negative association with financial well-being, with highly stressed individuals scoring 16.5 points lower on the financial well-being scale - a larger impact than traditional factors like income or education. 
 
 ## File Structure
 
