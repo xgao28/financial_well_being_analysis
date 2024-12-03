@@ -20,44 +20,121 @@ bibliography: references.bib
 library(tidyverse)
 library(arrow)
 library(ggplot2)
+library(car)
+library(GGally)
+library(broom)
+library(gridExtra)
+library(knitr)
 data <- read_parquet("../data/02-analysis_data/NFWBS_analysis_data.parquet")
 ```
 
-
-# Introduction
-
-## Significance
-
-## Estimand
-
-# Data
-
-## Overview
-
-## Measurement
-
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-library(skimr)
-skim_summary <- data %>%
-  #select(-PUF_ID) %>%  # Remove 'PUF_ID' column
-  select(where(is.numeric)) %>%  # Keep only numeric columns
-  skim()
-
-# Round the numeric columns of the skim summary
-skim_summary %>%
-  mutate_if(is.numeric, ~round(., 3)) %>%
-  select(-complete_rate, -n_missing, -numeric.hist) %>% 
-  print()
-```
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
 data_cleaned <- data[, !names(data) %in% "puf_id"]
+data_cleaned <- data_cleaned %>%
+  mutate(across(all_of(c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")), as.factor))
 ```
+
+# Introduction
+
+In today's complex financial landscape, achieving financial well-being is a fundamental goal for individuals and households. While financial well-being encompasses the ability to meet current and future financial obligations, its determinants span multiple domains including financial literacy, demographic characteristics, and psychosocial factors. Understanding these relationships is crucial for developing effective policies and interventions to improve financial outcomes across diverse population segments.
+
+To measure financial well-being systematically, the Consumer Financial Protection Bureau (CFPB) developed the Financial Well-Being Scale (FWBscore), a 10-item questionnaire assessing four critical elements: control over day-to-day finances, capacity to absorb financial shocks, progress toward financial goals, and ability to make life-improving choices. Alongside this measure, researchers have developed various instruments to assess financial knowledge and skills. The Lusardi and Mitchell financial knowledge scale (LMscore) @lusardi2008 provides a foundational three-item measure of basic financial concepts, while the Knoll and Houts financial knowledge scale (KHscore) @knoll2012 offers a more comprehensive 10-item assessment using item response theory. Additionally, the CFPB Financial Skill Scale (FSscore) @cfpb2015 evaluates practical financial competencies through an IRT-based approach.
+
+While previous research has examined financial literacy's role in economic outcomes, less attention has been paid to how demographic and psychosocial factors interact with financial knowledge to influence overall financial well-being. This gap is particularly significant given evidence suggesting that financial knowledge alone may not fully explain variations in financial outcomes across different population segments.
+
+This paper investigates how demographic characteristics (age, education, income, marital status) and psychosocial factors (health status, psychological distress) influence individuals' financial well-being as measured by the FWBscore, while accounting for their financial knowledge and skills as measured by the LMscore, KHscore, and FSscore. By examining these relationships comprehensively, we aim to identify which population segments may be more vulnerable to financial challenges and how personal circumstances interact with financial literacy to shape financial well-being outcomes.
+
+Our findings indicate [brief summary of key results], suggesting important implications for financial education programs and policy interventions. These results highlight the need for tailored approaches that consider both financial knowledge and individual circumstances in promoting financial well-being.
+
+The rest of the paper is organized as follows: Section 2 reviews relevant literature on financial well-being and its determinants. Section 3 describes our data and methodology. Section 4 presents our empirical results. Section 5 discusses the implications of our findings and concludes.
+
+
+# Data
+
+## Overview of the Dataset
+
+The dataset for this study is the Consumer Financial Protection Bureau’s (CFPB) National Financial Well-Being Survey Public Use File (PUF), collected in 2017. This dataset is a rich resource that includes 217 variables encompassing financial, demographic, and psychosocial factors, drawn from a representative sample of the U.S. population. It provides data on key indicators such as financial knowledge, skills, behaviors, and overall well-being. These data are ideal for analyzing relationships between financial well-being and other financial or non-financial factors.
+
+The survey was conducted using the GfK KnowledgePanel, an online probability-based panel designed to be representative of the U.S. adult population. The GfK KnowledgePanel is created by randomly selecting households and inviting them to participate in the panel. Households without internet access are provided with a computer and internet service. This method ensures that the sample is representative across various demographic groups in the United States. Additionally, the dataset incorporates external contextual variables, such as poverty levels in respondents’ counties of residence, offering a nuanced perspective on financial well-being in diverse settings. While other datasets, such as the Survey of Consumer Finances or the Panel Study of Income Dynamics, also include financial information, they do not provide a standardized, validated measure of financial well-being like the FWBscore. This makes the CFPB dataset uniquely suited for this study.
+
+## Variables of Interest
+
+### Primary Outcome Variable
+
+Financial Well-Being Score(FWBscore): The CFPB Financial Well-Being Scale score is the key outcome variable. It is a 10-item scale capturing four dimensions: control over day-to-day finances, capacity to absorb financial shocks, progress toward financial goals, and freedom of financial choices. Scores range from 0 to 100, with higher scores indicating greater financial well-being.
+
+### Independent Variables 
+
+All the independent variables are collected through self-reported questionnaire responses, as addressed below.
+
+Age (agecat): Categorized into age groups (e.g., 18–24, 25–34, 35–44, 45–54, 55–64, 65+).
+
+Education (PPEDUC): Highest degree attained, categorized from less than high school to graduate degrees.
+
+Household Income (PPINCIMP): Categorized income levels (e.g., <$20,000, $20,000-$39,999, $40,000-$59,999, etc.).
+
+Marital Status (PPMARIT): Categories include single, married, divorced, widowed, and other.
+
+Health (HEALTH): Self-reported general health, rated on a 5-point Likert scale from 1 (Poor) to 5 (Excellent).
+
+Stress (DISTRESS): Perceived level of stress, rated on a 5-point Likert scale from 1 (Not at all) to 5 (Extremely).
+
+### Additional Variables
+
+Lusardi and Mitchell Financial Knowledge Scale Score (LMscore): A 3-item summative scale measuring financial literacy, particularly in planning and decision-making.
+
+Knoll and Houts Financial Knowledge Scale Score (KHscore): A 10-item IRT-based measure assessing broader financial knowledge across multiple dimensions.
+
+Financial Skill Scale Score (FSscore): An IRT-based measure developed by the CFPB, capturing practical financial skills like budgeting, debt management, and saving.
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| 
+
+
+# List of variables to plot
+variables <- c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")
+
+# Initialize an empty list to store plots
+plot_list <- list()
+
+# Loop through variables and generate bar plots
+for (var in variables) {
+  plot <- ggplot(data_cleaned, aes_string(x = var)) +
+    geom_bar(alpha = 0.7, color = "black", fill = "skyblue") +
+    labs(
+      title = paste("Distribution of", var),
+      x = var,
+      y = "Frequency"
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+      plot.title = element_text(face = "bold", hjust = 0.5),
+      # axis.text.x = element_text(angle = 45, hjust = 1)
+    ) +
+    coord_flip()
+  # Add the plot to the list
+  plot_list[[var]] <- plot
+}
+
+grid.arrange(grobs = plot_list, ncol = 2)
+
+```
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+# Ensure categorical variables are factors
+data_cleaned <- data_cleaned 
+```
+
+
 
 
 ```{r}
@@ -70,33 +147,23 @@ data_long <- data_cleaned %>%
     names_to = "ScoreType", values_to = "Value"
   )
 
-# Plot using ggplot2
 ggplot(data_long, aes(x = Value)) +
-  geom_histogram(binwidth = 1, color = "black", fill = "skyblue", alpha = 0.7) +
+  geom_histogram(binwidth = 1, color = "white", fill = "steelblue", alpha = 0.9) +
   facet_wrap(~ScoreType, scales = "free", ncol = 2) +
   labs(
     title = "Histograms of Financial Scores",
+    subtitle = "Distribution of scores across different financial measures",
     caption = "FWBscore: Financial Well-being Scale\nFSscore: Financial Skill Scale\nLMscore: Lusardi and Mitchell Financial Knowledge Scale\nKHscore: Knoll and Houts Financial Knowledge Scale",
     x = "Score Value",
     y = "Frequency"
   ) +
-  theme_minimal()
-```
-
-The composition of finalwt remains on investigation.
-
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-ggplot(data_cleaned, aes(x = finalwt)) +
-  geom_density(color = "black", fill = "skyblue", alpha = 0.7) +
-  labs(
-    title = "Distribution of Final Weight (finalwt)",
-    x = "Final Weight (finalwt)",
-    y = "Frequency"
-  ) +
-  theme_minimal()
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    strip.background = element_rect(fill = "lightgray"),
+    strip.text = element_text(face = "bold")
+  )
 ```
 
 
@@ -104,17 +171,18 @@ ggplot(data_cleaned, aes(x = finalwt)) +
 
 The linear regression model can be expressed mathematically as:
 
-$$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_i + \beta_3 \cdot \text{FWBscore}_i + \beta_4 \cdot \text{FSscore}_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma^{2})$$
+$$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_i + \beta_3 \cdot \text{FSscore}_i + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, \sigma^{2})$$
 
 
 ### Model Components
-- $y_i$: The dependent variable, $\text{finalwt}_i$, for observation $i$.
+- $y_i$: The dependent variable, $\text{FWBscore}_i$, for observation $i$.
 - $\beta_0$: The intercept term (constant in the model).
 - $\beta_1, \beta_2, \beta_3, \beta_4$: The slopes (coefficients) of the respective predictor variables:
   - $\text{LMscore}_i$: Lusardi and Mitchell financial knowledge scale score.
   - $\text{KHscore}_i$: Knoll and Houts financial knowledge scale score.
   - $\text{FWBscore}_i$: Financial well-being scale score.
   - $\text{FSscore}_i$: Financial skill scale score.
+
 
 
 # Results
@@ -124,10 +192,10 @@ $$y_i = \beta_0 + \beta_1 \cdot \text{LMscore}_i + \beta_2 \cdot \text{KHscore}_
 #| echo: false
 #| warning: false
 #| message: false
-library(knitr)
+
 # Build a linear regression model
 # Assuming other columns in the dataset are predictors
-model <- lm(finalwt ~ LMscore + KHscore + FWBscore + FSscore, data = data_cleaned)
+model <- lm(FWBscore ~ LMscore + KHscore + FSscore, data = data_cleaned)
 
 # Display the summary of the model
 model_summary <- summary(model)
@@ -152,6 +220,64 @@ kable(
 ```
 
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| footnote: "The intercept represents the baseline category for each categorical variable. For instance, for 'agecat', the baseline is '18-24'; for 'PPEDUC', it is 'Less than high school'; for 'PPINCIMP', it is 'Less than $20,000'; for 'PPMARIT', it is 'Married'; for 'HEALTH', it is 'Poor'; and for 'DISTRESS', it is 'Strongly disagree'. All estimates are relative to these baselines."
+
+# Preprocess data: Ensure predictors are factors and drop missing values
+data_model <- data_cleaned %>%
+  mutate(across(all_of(c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")), as.factor))
+
+# Fit the linear regression model
+lm_model <- lm(FWBscore ~ agecat + PPEDUC + PPINCIMP + PPMARIT + HEALTH + DISTRESS, data = data_model)
+
+# Create tidy output and filter for significant results
+tidy_lm <- tidy(lm_model) %>% 
+  mutate(Significant = ifelse(p.value < 0.05, "Yes", "No")) %>%
+  filter(Significant == "Yes") 
+
+# Define variables and their mapping
+variable_mapping <- tibble(
+  term = tidy_lm$term,
+  Variable = case_when(
+    grepl("^agecat", term) ~ "agecat",
+    grepl("^PPEDUC", term) ~ "PPEDUC",
+    grepl("^PPINCIMP", term) ~ "PPINCIMP",
+    grepl("^PPMARIT", term) ~ "PPMARIT",
+    grepl("^HEALTH", term) ~ "HEALTH",
+    grepl("^DISTRESS", term) ~ "DISTRESS",
+    TRUE ~ "Intercept"
+  ),
+  Value = case_when(
+    Variable == "Intercept" ~ "See footnote",
+    TRUE ~ str_remove(term, Variable)
+  )
+)
+
+# Join the mapping back to the original data
+tidy_lm <- tidy_lm %>%
+  left_join(variable_mapping, by = "term") %>%
+  select(Variable, Value, estimate, std.error, statistic, p.value) %>%
+  mutate(
+    estimate = round(estimate, 3),
+    std.error = round(std.error, 3),
+    statistic = round(statistic, 3),
+    p.value = round(p.value, 3)
+  )
+
+# Create the table
+library(knitr)
+kable(tidy_lm, caption = "Linear Model Output with Significant Variable and Levels")
+  # %>% footnote( "The intercept represents the baseline category for each categorical variable. For instance, for 'agecat', the baseline is '18-24'; for 'PPEDUC', it is 'Less than high school'; for 'PPINCIMP', it is 'Less than $20,000'; for 'PPMARIT', it is 'Married'; for 'HEALTH', it is 'Refused'; and for 'DISTRESS', it is 'Refused'. All estimates are relative to these baselines.")
+```
+
+```{r}
+# Calculate VIF
+library(car)
+vif(lm_model)
+```
 
 
 # Discussion
