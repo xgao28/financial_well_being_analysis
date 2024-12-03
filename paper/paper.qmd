@@ -9,6 +9,7 @@ abstract: "This paper analyzes the determinants of financial well-being using th
 format: pdf
 number-sections: true
 bibliography: references.bib
+toc: true
 ---
 
 ```{r}
@@ -119,6 +120,8 @@ corrplot(cor(continuous_vars),
 #| message: false
 #| fig-height: 12
 #| fig-width: 10
+#| label: fig-barplots
+#| fig-cap: "Bar Plots of Categorical Variables"
 
 # List of variables to plot
 variables <- c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")
@@ -195,13 +198,6 @@ ggplot(data_long, aes(x = Value)) +
   )
 ```
 
-```{r}
-for (var in variables) {
-  print(var)
-  print(levels(data_cleaned[[var]]))
-}
-```
-
 
 # Model
 
@@ -272,6 +268,7 @@ We conducted several diagnostic checks to validate our model assumptions. The re
 #| warning: false
 #| message: false
 #| tbl-note: "Baseline categories are: Age (18-24), Education (Less than high school), Income (Less than $20,000), Marital Status (Married), Health (Poor), and Distress (Strongly disagree). All estimates are interpreted relative to these baseline categories."
+#| label: tbl-output
 
 # Create tidy output and filter for significant results
 tidy_lm <- tidy(lm_model) %>%
@@ -316,6 +313,7 @@ kable(tidy_lm, caption = "Linear Model Output with Significant Variable and Leve
 #| echo: false
 #| warning: false
 #| message: false
+#| label: tbl-suppcoef
 
 # Build a linear regression model
 # Assuming other columns in the dataset are predictors
@@ -343,7 +341,7 @@ kable(
 )
 ```
 
-Our analysis reveals several key patterns in the determinants of financial well-being. The coefficient plot above visualizes the main findings from our primary model, showing the relative importance of different factors.
+Our analysis reveals several key patterns in the determinants of financial well-being. The coefficient table @tbl-output visualizes the main findings from our primary model, showing the relative importance of different factors.
 
 ## Age Effects
 Age demonstrates a strong positive relationship with financial well-being, particularly for older adults. Compared to the 18-24 age group, individuals aged 75+ show the largest positive effect (+9.37 points), followed by those 70-74 (+7.51 points) and 62-69 (+6.35 points). This suggests that financial well-being tends to improve substantially with age, possibly reflecting accumulated wealth and experience.
@@ -355,10 +353,10 @@ Income exhibits the strongest positive association with financial well-being amo
 Health status shows a strong positive relationship with financial well-being, while psychological distress demonstrates the largest negative effects in our model. Excellent health is associated with a 7.70-point increase compared to poor health. Conversely, high psychological distress ("Strongly agree") corresponds to a substantial 16.52-point decrease in financial well-being.
 
 ## Financial Knowledge and Skills
-Our supplementary model shows that all three measures of financial literacy contribute positively to financial well-being, though with varying magnitudes:
-- Financial skills (FSscore) show a significant positive effect (β = 0.501)
-- Knoll and Houts financial knowledge (KHscore) demonstrates the strongest effect (β = 3.748)
-- Lusardi and Mitchell financial knowledge (LMscore) shows a moderate positive effect (β = 0.874)
+Our supplementary model, as in @tbl-suppcoef, shows that all three measures of financial literacy contribute positively to financial well-being, though with varying magnitudes:
+- Financial skills (FSscore) show a significant positive effect ($\beta$ = 0.501)
+- Knoll and Houts financial knowledge (KHscore) demonstrates the strongest effect ($\beta$ = 3.748)
+- Lusardi and Mitchell financial knowledge (LMscore) shows a moderate positive effect ($\beta$ = 0.874)
 
 These results suggest that while financial knowledge and skills are important, demographic and psychosocial factors play substantial roles in determining financial well-being. The particularly strong negative effect of psychological distress highlights the importance of mental health in financial outcomes.
 

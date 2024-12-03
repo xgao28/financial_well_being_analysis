@@ -10,15 +10,21 @@ set.seed(2690) # Set seed for reproducibility
 
 # Define categorical variables and their levels
 agecat_levels <- c("18-24", "25-34", "35-44", "45-54", "55-61", "62-69", "70-74", "75+")
-ppeduc_levels <- c("Less than high school", "High school degree/GED", "Some college/Associate",
-                   "Bachelor's degree", "Graduate/professional degree")
-ppincimp_levels <- c("Less than $20,000", "$20,000 to $29,999", "$30,000 to $39,999",
-                     "$40,000 to $49,999", "$50,000 to $59,999", "$60,000 to $74,999",
-                     "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more")
+ppeduc_levels <- c(
+  "Less than high school", "High school degree/GED", "Some college/Associate",
+  "Bachelor's degree", "Graduate/professional degree"
+)
+ppincimp_levels <- c(
+  "Less than $20,000", "$20,000 to $29,999", "$30,000 to $39,999",
+  "$40,000 to $49,999", "$50,000 to $59,999", "$60,000 to $74,999",
+  "$75,000 to $99,999", "$100,000 to $149,999", "$150,000 or more"
+)
 ppmarit_levels <- c("Married", "Widowed", "Divorced/Separated", "Never married", "Living with partner")
 health_levels <- c("Poor", "Fair", "Good", "Very good", "Excellent")
-distress_levels <- c("Strongly disagree", "Disagree", "Neither agree nor disagree",
-                     "Agree", "Strongly agree")
+distress_levels <- c(
+  "Strongly disagree", "Disagree", "Neither agree nor disagree",
+  "Agree", "Strongly agree"
+)
 
 # Number of observations
 n <- 1000
