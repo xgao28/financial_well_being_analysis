@@ -103,18 +103,18 @@ library(corrplot)
 continuous_vars <- data_cleaned %>%
   select(FWBscore, FSscore, LMscore, KHscore)
 
-corrplot(cor(continuous_vars), 
-         method="color", 
-         type="upper", 
-         addCoef.col = "black",
-         tl.col="black", 
-         tl.srt=45)
-
+corrplot(cor(continuous_vars),
+  method = "color",
+  type = "upper",
+  addCoef.col = "black",
+  tl.col = "black",
+  tl.srt = 45
+)
 ```
 
 
 ```{r}
-#| echo: false 
+#| echo: false
 #| warning: false
 #| message: false
 #| fig-height: 12
@@ -142,7 +142,7 @@ for (var in variables) {
     geom_bar(alpha = 0.8, fill = "#2c7fb8", color = "white") +
     labs(
       title = var_labels[var],
-      x = NULL,  # Remove x label since it's redundant with title
+      x = NULL, # Remove x label since it's redundant with title
       y = "Count"
     ) +
     theme_minimal(base_size = 12) +
@@ -154,7 +154,7 @@ for (var in variables) {
       axis.text.y = element_text(size = 10)
     ) +
     coord_flip()
-    
+
   # Add the plot to the list
   plot_list[[var]] <- plot
 }
@@ -194,6 +194,14 @@ ggplot(data_long, aes(x = Value)) +
     strip.text = element_text(face = "bold")
   )
 ```
+
+```{r}
+for (var in variables) {
+  print(var)
+  print(levels(data_cleaned[[var]]))
+}
+```
+
 
 # Model
 
@@ -250,8 +258,8 @@ data_model <- data_cleaned %>%
 # Fit the linear regression model
 lm_model <- lm(FWBscore ~ agecat + PPEDUC + PPINCIMP + PPMARIT + HEALTH + DISTRESS, data = data_model)
 
-par(mfrow=c(2,2))
-plot(lm_model, which=1:4)
+par(mfrow = c(2, 2))
+plot(lm_model, which = 1:4)
 ```
 
 We conducted several diagnostic checks to validate our model assumptions. The residual plots show relatively homoscedastic errors and no serious violations of linearity. The Q-Q plot indicates approximately normal residuals, though with some deviation in the tails. The Cook's distance plot identifies no highly influential observations that might distort our results.
@@ -266,8 +274,9 @@ We conducted several diagnostic checks to validate our model assumptions. The re
 #| tbl-note: "Baseline categories are: Age (18-24), Education (Less than high school), Income (Less than $20,000), Marital Status (Married), Health (Poor), and Distress (Strongly disagree). All estimates are interpreted relative to these baseline categories."
 
 # Create tidy output and filter for significant results
-tidy_lm <- tidy(lm_model) %>% 
-  mutate(Significant = ifelse(p.value < 0.05, "Yes", "No")) %>% filter(Significant == "Yes") 
+tidy_lm <- tidy(lm_model) %>%
+  mutate(Significant = ifelse(p.value < 0.05, "Yes", "No")) %>%
+  filter(Significant == "Yes")
 
 # Define variables and their mapping
 variable_mapping <- tibble(

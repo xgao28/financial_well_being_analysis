@@ -22,7 +22,7 @@ df <- df %>% select(PUF_ID, agecat, PPEDUC, PPINCIMP, PPMARIT, HEALTH, DISTRESS,
 
 # Remap values for agecat, PPEDUC, PPINCIMP, PPMARIT, HEALTH, DISTRESS
 
-df$agecat = revalue(factor(df$agecat), c(
+df$agecat <- revalue(factor(df$agecat), c(
   `1` = "18-24",
   `2` = "25-34",
   `3` = "35-44",
@@ -33,7 +33,7 @@ df$agecat = revalue(factor(df$agecat), c(
   `8` = "75+"
 ))
 
-df$PPEDUC = revalue(factor(df$PPEDUC), c(
+df$PPEDUC <- revalue(factor(df$PPEDUC), c(
   `1` = "Less than high school",
   `2` = "High school degree/GED",
   `3` = "Some college/Associate",
@@ -41,7 +41,7 @@ df$PPEDUC = revalue(factor(df$PPEDUC), c(
   `5` = "Graduate/professional degree"
 ))
 
-df$PPINCIMP = revalue(factor(df$PPINCIMP), c(
+df$PPINCIMP <- revalue(factor(df$PPINCIMP), c(
   `1` = "Less than $20,000",
   `2` = "$20,000 to $29,999",
   `3` = "$30,000 to $39,999",
@@ -53,7 +53,7 @@ df$PPINCIMP = revalue(factor(df$PPINCIMP), c(
   `9` = "$150,000 or more"
 ))
 
-df$PPMARIT = revalue(factor(df$PPMARIT), c(
+df$PPMARIT <- revalue(factor(df$PPMARIT), c(
   `1` = "Married",
   `2` = "Widowed",
   `3` = "Divorced/Separated",
@@ -61,7 +61,7 @@ df$PPMARIT = revalue(factor(df$PPMARIT), c(
   `5` = "Living with partner"
 ))
 
-df$HEALTH = revalue(factor(df$HEALTH), c(
+df$HEALTH <- revalue(factor(df$HEALTH), c(
   `-1` = "Refused",
   `1` = "Poor",
   `2` = "Fair",
@@ -70,7 +70,7 @@ df$HEALTH = revalue(factor(df$HEALTH), c(
   `5` = "Excellent"
 ))
 
-df$DISTRESS = revalue(factor(df$DISTRESS), c(
+df$DISTRESS <- revalue(factor(df$DISTRESS), c(
   `-1` = "Refused",
   `1` = "Strongly disagree",
   `2` = "Disagree",
@@ -79,12 +79,12 @@ df$DISTRESS = revalue(factor(df$DISTRESS), c(
   `5` = "Strongly agree"
 ))
 
-df$FWBscore = revalue(factor(df$FWBscore), c(
+df$FWBscore <- revalue(factor(df$FWBscore), c(
   `-4` = "Response not written to database",
   `-1` = "Refused"
 ))
 
-df$FSscore = revalue(factor(df$FSscore), c(
+df$FSscore <- revalue(factor(df$FSscore), c(
   `-1` = "Refused"
 ))
 
@@ -93,12 +93,12 @@ df$FSscore = revalue(factor(df$FSscore), c(
 data_cleaned <- subset(df, FWBscore != "Refused" & FSscore != "Refused" & FWBscore != "Response not written to database")
 
 # filter all_of(c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")) are "Refused"
-data_cleaned <- subset(data_cleaned, agecat != "Refused" 
-                       & PPEDUC != "Refused" 
-                       & PPINCIMP != "Refused" 
-                       & PPMARIT != "Refused" 
-                       & HEALTH != "Refused" 
-                       & DISTRESS != "Refused")
+data_cleaned <- subset(data_cleaned, agecat != "Refused" &
+  PPEDUC != "Refused" &
+  PPINCIMP != "Refused" &
+  PPMARIT != "Refused" &
+  HEALTH != "Refused" &
+  DISTRESS != "Refused")
 
 # Convert FWBscore and FSscore to numeric
 data_cleaned$FWBscore <- as.numeric(data_cleaned$FWBscore)
