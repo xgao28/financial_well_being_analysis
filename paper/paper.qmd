@@ -50,16 +50,16 @@ While previous research has examined financial literacy's role in economic outco
 
 Our primary estimand is the average change in financial well-being score associated with variations in demographic and psychosocial characteristics, holding other factors constant. This causal parameter helps identify which factors have the strongest relationship with financial well-being, enabling targeted policy interventions.
 
-Our findings indicate [brief summary of key results], suggesting important implications for financial education programs and policy interventions. These results highlight the need for tailored approaches that consider both financial knowledge and individual circumstances in promoting financial well-being.
+Our findings indicate that psychological distress has the strongest negative association with financial well-being (-16.5 points), while higher income ($150,000+) shows the largest positive effect (+12.6 points). Advanced age (75+ years) and excellent health status are also strong positive predictors (+9.4 and +7.7 points respectively). Notably, financial knowledge measures show relatively modest effects compared to these psychological and demographic factors, suggesting a need to rethink traditional approaches to financial education.
 
-The rest of the paper is organized as follows: Section 2 reviews relevant literature on financial well-being and its determinants. Section 3 describes our data and methodology. Section 4 presents our empirical results. Section 5 discusses the implications of our findings and concludes. The appendix provides additional details on the survey methodology and sampling design.
+The rest of the paper is organized as follows: @sec-data describes our data and methodology. @sec-model presents our modeling approach. @sec-results presents our empirical results. @sec-discussion discusses the implications of our findings and concludes. @sec-app provides additional details on the survey methodology and @sec-ack provides acknowledgements.
 
 
-# Data
+# Data {#sec-data}
 
 ## Overview of the Dataset
 
-The dataset for this study is the Consumer Financial Protection Bureau’s (CFPB) National Financial Well-Being Survey Public Use File (PUF), collected in 2017. This dataset is a rich resource that includes 217 variables encompassing financial, demographic, and psychosocial factors, drawn from a representative sample of the U.S. population. It provides data on key indicators such as financial knowledge, skills, behaviors, and overall well-being. These data are ideal for analyzing relationships between financial well-being and other financial or non-financial factors.
+The dataset for this study is the National Financial Well-Being Survey Public Use File (PUF) collected by @cfpb_fwb_survey. This dataset is a rich resource that includes 217 variables encompassing financial, demographic, and psychosocial factors, drawn from a representative sample of the U.S. population. It provides data on key indicators such as financial knowledge, skills, behaviors, and overall well-being. These data are ideal for analyzing relationships between financial well-being and other financial or non-financial factors.
 
 The survey was conducted using the GfK KnowledgePanel, an online probability-based panel designed to be representative of the U.S. adult population. The GfK KnowledgePanel is created by randomly selecting households and inviting them to participate in the panel. Households without internet access are provided with a computer and internet service. This method ensures that the sample is representative across various demographic groups in the United States. Additionally, the dataset incorporates external contextual variables, such as poverty levels in respondents’ counties of residence, offering a nuanced perspective on financial well-being in diverse settings. While other datasets, such as the Survey of Consumer Finances or the Panel Study of Income Dynamics, also include financial information, they do not provide a standardized, validated measure of financial well-being like the FWBscore. This makes the CFPB dataset uniquely suited for this study.
 
@@ -93,6 +93,43 @@ Knoll and Houts Financial Knowledge Scale Score (KHscore): A 10-item IRT-based m
 
 Financial Skill Scale Score (FSscore): An IRT-based measure developed by the CFPB, capturing practical financial skills like budgeting, debt management, and saving.
 
+
+## Variable Summary
+
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: fig-histograms
+#| fig-cap: "Histograms of Financial Scores"
+data_long <- data_cleaned %>%
+  pivot_longer(
+    cols = c(FWBscore, FSscore, LMscore, KHscore),
+    names_to = "ScoreType", values_to = "Value"
+  )
+
+ggplot(data_long, aes(x = Value)) +
+  geom_histogram(binwidth = 1, color = "white", fill = "steelblue", alpha = 0.9) +
+  facet_wrap(~ScoreType, scales = "free", ncol = 2) +
+  labs(
+    # title = "Histograms of Financial Scores",
+    # subtitle = "Distribution of scores across different financial measures",
+    # caption = "FWBscore: Financial Well-being Scale\nFSscore: Financial Skill Scale\nLMscore: Lusardi and Mitchell Financial Knowledge Scale\nKHscore: Knoll and Houts Financial Knowledge Scale",
+    x = "Score Value",
+    y = "Frequency"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    strip.background = element_rect(fill = "lightgray"),
+    strip.text = element_text(face = "bold")
+  )
+```
+
+@fig-histograms shows the distribution of four different financial scores (FSscore, FWBscore, KHscore, and LMscore) through histograms. FSscore and FWBscore show continuous distributions with bell-shaped curves, though not perfectly normal: FSscore ranges from about 0-80 with a peak around 40-50, while FWBscore has a similar range but appears more symmetrically distributed with its peak around 45-50. The KHscore shows a discrete distribution across four main categories (from -2 to 1), with the highest frequency at 0 and relatively balanced frequencies between -1 and 1. The LMscore is also discrete but shows a strong positive skew, with values ranging from 0 to 3 and a clear majority of responses at the highest value (3). This pattern suggests that while financial wellbeing and financial situations (FWB and FS) vary normally across the population, the literacy measure (LM) indicates most respondents have high literacy levels.
+
 ```{r}
 #| label: fig-correlations
 #| fig-cap: "Correlation Plot of Continuous Financial Measures"
@@ -113,6 +150,7 @@ corrplot(cor(continuous_vars),
 )
 ```
 
+The correlation matrix heatmap as @fig-correlations shows the relationships between four different scores: FWBscore, FSscore, LMscore, and KHscore. The strongest correlation appears between LMscore and KHscore with a moderate positive correlation of 0.6, followed by a moderate correlation of 0.49 between FWBscore and FSscore. FWBscore shows weak to moderate positive correlations with LMscore (0.23) and KHscore (0.33), while FSscore exhibits the weakest correlations with LMscore (0.11) and KHscore (0.19). All correlations are positive, suggesting that as one score increases, the others tend to increase as well, though with varying strengths of association. The diagonal shows perfect correlations of 1.0, as expected when comparing a variable with itself.
 
 ```{r}
 #| echo: false
@@ -169,39 +207,13 @@ grid.arrange(
 )
 ```
 
-```{r}
-#| echo: false
-#| warning: false
-#| message: false
-data_long <- data_cleaned %>%
-  pivot_longer(
-    cols = c(FWBscore, FSscore, LMscore, KHscore),
-    names_to = "ScoreType", values_to = "Value"
-  )
+@fig-barplots provides a comprehensive demographic overview of the survey population. The age distribution shows strong representation across middle-age groups (25-34, 45-54, and 62-69) with fewer respondents in the youngest (18-24) and oldest (70-74) categories. Education levels indicate that "Some college/Associate" and "High school degree/GED" are the most common, while "Less than high school" is the least common. Income distribution is relatively balanced across categories, with slightly higher numbers in the $100,000-$149,999 range. Marital status shows a clear majority of "Married" respondents, significantly outnumbering other categories. Health status data reveals most respondents report "Very good" or "Good" health, with few reporting "Poor" health. Finally, psychological distress measurements show a normal-like distribution centered around "Neither agree nor disagree" and "Agree" responses, with fewer responses at the extremes ("Strongly agree" and "Strongly disagree").
 
-ggplot(data_long, aes(x = Value)) +
-  geom_histogram(binwidth = 1, color = "white", fill = "steelblue", alpha = 0.9) +
-  facet_wrap(~ScoreType, scales = "free", ncol = 2) +
-  labs(
-    title = "Histograms of Financial Scores",
-    subtitle = "Distribution of scores across different financial measures",
-    # caption = "FWBscore: Financial Well-being Scale\nFSscore: Financial Skill Scale\nLMscore: Lusardi and Mitchell Financial Knowledge Scale\nKHscore: Knoll and Houts Financial Knowledge Scale",
-    x = "Score Value",
-    y = "Frequency"
-  ) +
-  theme_minimal(base_size = 14) +
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    strip.background = element_rect(fill = "lightgray"),
-    strip.text = element_text(face = "bold")
-  )
-```
-
-
-# Model
+# Model {#sec-model}
 
 We employ two complementary regression models to analyze financial well-being. Our primary model examines the relationship between financial well-being and demographic and psychosocial factors, while a supplementary model focuses on the role of financial knowledge and skills.
+
+## Primary Model
 
 The primary model can be expressed as:
 
@@ -227,6 +239,7 @@ Here:
 
 - Psychological distress ranges from "Strongly disagree" (baseline) to "Strongly agree".
 
+## Supplementary Model
 
 The supplementary model examining financial literacy's role is:
 
@@ -241,27 +254,83 @@ where the scores represent standardized measures of financial knowledge and skil
 ```{r}
 #| label: fig-model-diagnostics
 #| fig-cap: "Model Diagnostic Plots"
-#| fig-height: 8
+#| fig-align: 'center'
 #| fig-width: 10
-#| layout: [[1,1], [1,1]]
-#| echo: false
+#| fig-height: 8
 #| warning: false
 #| message: false
-# Preprocess data: Ensure predictors are factors and drop missing values
+#| echo: false
+
+library(tidyverse)
+library(gridExtra)
+
+# Preprocess data and fit model
 data_model <- data_cleaned %>%
-  mutate(across(all_of(c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", "HEALTH", "DISTRESS")), as.factor))
+  mutate(across(all_of(c("agecat", "PPEDUC", "PPINCIMP", "PPMARIT", 
+                        "HEALTH", "DISTRESS")), as.factor))
 
-# Fit the linear regression model
-lm_model <- lm(FWBscore ~ agecat + PPEDUC + PPINCIMP + PPMARIT + HEALTH + DISTRESS, data = data_model)
+# Fit the model
+lm_model <- lm(FWBscore ~ agecat + PPEDUC + PPINCIMP + PPMARIT + 
+               HEALTH + DISTRESS, data = data_model)
 
-par(mfrow = c(2, 2))
-plot(lm_model, which = 1:4)
+# Create the four diagnostic plots
+# Residuals vs Fitted
+p1 <- ggplot(data.frame(
+    fitted = fitted(lm_model),
+    residuals = resid(lm_model)
+  ), aes(x = fitted, y = residuals)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "loess", se = FALSE, color = "red") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Residuals vs Fitted",
+       x = "Fitted values",
+       y = "Residuals") +
+  theme_minimal()
+
+# Normal Q-Q
+p2 <- ggplot(data.frame(
+    theoretical = qnorm(ppoints(length(resid(lm_model)))),
+    sample = sort(scale(resid(lm_model)))
+  ), aes(x = theoretical, y = sample)) +
+  geom_point(alpha = 0.3) +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  labs(title = "Normal Q-Q",
+       x = "Theoretical Quantiles",
+       y = "Standardized Residuals") +
+  theme_minimal()
+
+# Scale-Location
+p3 <- ggplot(data.frame(
+    fitted = fitted(lm_model),
+    sqrt_abs_resid = sqrt(abs(scale(resid(lm_model))))
+  ), aes(x = fitted, y = sqrt_abs_resid)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "loess", se = FALSE, color = "red") +
+  labs(title = "Scale-Location",
+       x = "Fitted values",
+       y = expression(sqrt("|Standardized residuals|"))) +
+  theme_minimal()
+
+# Cook's Distance
+p4 <- ggplot(data.frame(
+    index = 1:length(cooks.distance(lm_model)),
+    cooks = cooks.distance(lm_model)
+  ), aes(x = index, y = cooks)) +
+  geom_point(alpha = 0.3) +
+  labs(title = "Cook's Distance",
+       x = "Observation Number",
+       y = "Cook's distance") +
+  theme_minimal()
+
+# Combine plots
+grid.arrange(p1, p2, p3, p4, ncol = 2)
 ```
 
-We conducted several diagnostic checks to validate our model assumptions. The residual plots show relatively homoscedastic errors and no serious violations of linearity. The Q-Q plot indicates approximately normal residuals, though with some deviation in the tails. The Cook's distance plot identifies no highly influential observations that might distort our results.
+
+We conducted several diagnostic checks to validate our model assumptions, as illustrated in @fig-model-diagnostics. The residual plots show relatively homoscedastic errors and no serious violations of linearity. The Q-Q plot indicates approximately normal residuals, though with some deviation in the tails. The Cook's distance plot identifies no highly influential observations that might distort our results.
 
 
-# Results
+# Results {#sec-results}
 
 ```{r}
 #| echo: false
@@ -324,11 +393,11 @@ model_summary <- summary(model)
 
 # Create a data frame with key statistics
 lm_results <- data.frame(
-  Term = rownames(model_summary$coefficients),
-  Estimate = model_summary$coefficients[, "Estimate"],
-  Std_Error = model_summary$coefficients[, "Std. Error"],
-  t_value = model_summary$coefficients[, "t value"],
-  p_value = model_summary$coefficients[, "Pr(>|t|)"]
+  # Term = rownames(model_summary$coefficients),
+  estimate = model_summary$coefficients[, "Estimate"],
+  std.error = model_summary$coefficients[, "Std. Error"],
+  statistic = model_summary$coefficients[, "t value"],
+  p.value = model_summary$coefficients[, "Pr(>|t|)"]
 )
 
 # Round values for better readability
@@ -337,7 +406,7 @@ lm_results[, -1] <- round(lm_results[, -1], 3)
 # Display the table using knitr::kable
 kable(
   lm_results,
-  caption = "Summary of Linear Regression Model"
+  caption = "Summary of Supplementary Model"
 )
 ```
 
@@ -353,15 +422,17 @@ Income exhibits the strongest positive association with financial well-being amo
 Health status shows a strong positive relationship with financial well-being, while psychological distress demonstrates the largest negative effects in our model. Excellent health is associated with a 7.70-point increase compared to poor health. Conversely, high psychological distress ("Strongly agree") corresponds to a substantial 16.52-point decrease in financial well-being.
 
 ## Financial Knowledge and Skills
-Our supplementary model, as in @tbl-suppcoef, shows that all three measures of financial literacy contribute positively to financial well-being, though with varying magnitudes:
-- Financial skills (FSscore) show a significant positive effect ($\beta$ = 0.501)
-- Knoll and Houts financial knowledge (KHscore) demonstrates the strongest effect ($\beta$ = 3.748)
-- Lusardi and Mitchell financial knowledge (LMscore) shows a moderate positive effect ($\beta$ = 0.874)
+Our supplementary model, as in Table 2, requires careful interpretation given the distinct distributions of our financial literacy measures:
 
-These results suggest that while financial knowledge and skills are important, demographic and psychosocial factors play substantial roles in determining financial well-being. The particularly strong negative effect of psychological distress highlights the importance of mental health in financial outcomes.
+Financial skills (FSscore) shows a moderate positive effect ($\beta$ = 0.501), which is meaningful given its approximately normal distribution across the population.
 
+While Knoll and Houts financial knowledge (KHscore) shows a large coefficient ($\beta$ = 3.748), this should be interpreted with caution given its discrete, roughly uniform distribution across four categories (-2 to 1).
 
-# Discussion
+The Lusardi and Mitchell financial knowledge (LMscore) effect ($\beta$ = 0.874) must be interpreted carefully due to its highly skewed distribution, with most respondents scoring at the maximum value of 3.
+
+These results suggest that while all measures show positive associations with financial well-being, their interpretations need to account for their distinct distributional characteristics. The FSscore's effect may be the most reliably interpretable given its normal distribution, while the strong coefficient for KHscore and moderate coefficient for LMscore should be considered in light of their non-normal distributions. These distributional patterns suggest that future research might benefit from more granular measures of financial knowledge that could better capture variability across the population.
+
+# Discussion {#sec-discussion}
 
 ## Overview of Research Contribution
 
@@ -399,123 +470,40 @@ In conclusion, our findings suggest that achieving financial well-being requires
 
 # Appendix
 
-## Appendix: Survey Methodology and Sampling Design
+## Survey Methodology {#sec-app}
 
-### Survey Design and Implementation
+The CFPB Financial Well-Being Scale methodology merits critical examination across three key dimensions: sampling design, measurement validation, and methodological limitations.
 
-#### Sampling Framework
-The CFPB National Financial Well-Being Survey employs a sophisticated sampling design through GfK's KnowledgePanel. The panel uses address-based sampling (ABS) methods derived from the United States Postal Service's Delivery Sequence File. This approach offers several advantages over traditional random-digit dialing:
+### Sampling Framework and Implementation
 
-1. **Coverage**: The sampling frame covers approximately 97% of U.S. households, including those without landline phones or internet access.
+The survey employed a multi-round data collection approach through a large nationally recognized provider of survey data. The initial round fielded 46 candidate items to 4,500 respondents, with the sample divided between adults aged 18 to 61 and those aged 62 and older. This approach aimed for a diverse consumer base, though not necessarily nationally representative, ensuring that the sample was roughly similar to the U.S. population based on Census demographics for working-age and older consumers. The inclusion of both younger and older age groups, as well as varying modes of administration (self-administered and interviewer-administered), is a strength in addressing potential mode effects and providing insights into how different populations respond to the scale.
 
-2. **Non-Response Mitigation**: By providing internet access and devices to selected households that lack them, the design reduces the selection bias typically associated with online surveys.
+However, despite efforts to achieve diversity, there are inherent challenges in fully representing transient or hard-to-reach populations, which could introduce selection bias. Moreover, the exclusion of approximately 500 pencil-and-paper surveys due to lack of confidence in these data suggests variability in data quality across different collection methods, potentially affecting the generalizability of findings.
 
-3. **Panel Characteristics**: The ongoing nature of the panel allows for:
-   - Detailed profiling of panelists
-   - Lower attrition rates compared to one-time surveys
-   - Higher response rates due to established relationships
+### Measurement Development and Validation
 
-#### Sample Size and Power Analysis
-The final sample of 6,394 respondents was determined through power analysis to detect small-to-medium effect sizes (Cohen's d = 0.2) with 80% power at α = 0.05. This sample size accounts for:
+The development of the Financial Well-Being Scale adhered to item response theory (IRT) principles, involving extensive rounds of refinement from an initial pool of items down to the final set. The use of exploratory and confirmatory factor analysis, alongside IRT modeling, provided robust evidence for the scale's structure. Psychometric analyses conducted by Vector Psychometric Group supported the use of a bi-factor model, capturing an overall financial well-being score while accounting for positive and negative wording effects within items.
 
-- Expected response rates (~64%)
-- Need for subgroup analyses
-- Anticipated missing data
-- Design effects from complex sampling
+The reported marginal reliability of at least 0.89 indicates strong internal consistency, and the abbreviated version also showed acceptable reliability above 0.80. However, the absence of temporal stability metrics limits the understanding of the scale's consistency over time. Furthermore, the reliance on cognitive interviews with a relatively small sample size (n=19) may limit the breadth of perspectives captured, especially across diverse populations.
 
-#### Survey Administration
-The survey implementation incorporated several methodological features to enhance data quality:
+Validation of the scale included testing its performance across different demographic groups and survey modes, supporting the comparability of scores derived from different contexts. Known-groups validation helped establish discriminant validity, and correlations with objective financial measures provided criterion validity. Nevertheless, cross-validation with external datasets remains limited, which can affect the extent to which the results can be generalized beyond the study sample.
 
-1. **Mixed-Mode Testing**:
-   - Self-administered online version
-   - Interviewer-administered telephone version
-   - Comparative analysis of mode effects
+### Methodological Strengths and Limitations
 
-2. **Response Rate Enhancement**:
-   - Multiple contact attempts
-   - Incentive structure for participation
-   - Reminder emails and phone calls
+The mixed-mode implementation allowed for the assessment of mode effects, which is important given documented differences in self-reporting behaviors depending on the survey format. Quality control measures such as attention checks and monitoring of completion times were used to ensure data integrity, although the specific criteria applied and their impact on the final sample composition are not detailed.
 
-3. **Quality Control Measures**:
-   - Attention check questions
-   - Time-to-completion monitoring
-   - Response pattern analysis
+Critical limitations include:
+1. Potential underrepresentation of certain populations despite the address-based sampling methodology.
+2. Self-report bias in financial measures, particularly relevant for sensitive topics.
+3. Limited assessment of the temporal stability of the financial well-being construct.
 
-### Measurement Validation
+The study achieved a response rate that exceeds typical online panel rates, but this also raises questions about nonresponse bias. While multiple contact attempts and incentives were utilized, a deeper analysis of nonresponse patterns would enhance methodological transparency.
 
-#### Scale Development Process
-The Financial Well-Being Scale underwent rigorous development:
+In summary, the methodological choices reflect a balance between practical constraints and ideal survey design standards. The approach aligns with contemporary practices in survey research while acknowledging limitations common in large-scale financial studies.
 
-1. **Initial Item Pool**:
-   - 47 candidate items
-   - Cognitive interviews with 19 adults
-   - Expert review panel assessment
+\newpage
 
-2. **Iterative Testing**:
-   - Three rounds of data collection
-   - Progressive item reduction
-   - Final selection of 10 items
-
-3. **Psychometric Analysis**:
-   - Item Response Theory modeling
-   - Differential Item Functioning analysis
-   - Reliability assessment (marginal reliability ≥ 0.89)
-
-#### Cross-Validation
-The scale's validity was established through multiple approaches:
-
-1. **Content Validity**:
-   - Expert review
-   - Consumer feedback
-   - Theoretical alignment
-
-2. **Construct Validity**:
-   - Factor analysis
-   - Known-groups validation
-   - Convergent/discriminant validity
-
-3. **Criterion Validity**:
-   - Correlation with objective financial measures
-   - Predictive validity assessment
-   - Cross-validation with external datasets
-
-### Limitations and Considerations
-
-1. **Selection Bias**:
-   - While the KnowledgePanel mitigates many selection issues, some hard-to-reach populations may still be underrepresented
-   - Panel conditioning effects may influence responses
-
-2. **Measurement Error**:
-   - Self-reported data subject to social desirability bias
-   - Recall bias in retrospective questions
-   - Mode effects between self-administered and interviewer-administered versions
-
-3. **External Validity**:
-   - Generalizability across different economic conditions
-   - Temporal stability of constructs
-   - Cross-cultural applicability
-
-### Simulation Study
-To assess the robustness of our sampling approach, we conducted a simulation study:
-
-1. **Method**:
-   - Generated 1,000 synthetic datasets
-   - Varied response patterns and missing data mechanisms
-   - Tested sensitivity to different sampling weights
-
-2. **Results**:
-   - Sample size provides stable estimates (CV < 0.05)
-   - Minimal bias from missing data (< 2% change in estimates)
-   - Robust to different weighting schemes
-
-3. **Implications**:
-   - Confirms adequacy of sample size
-   - Supports reliability of estimates
-   - Validates analytical approach
-
-This methodological framework ensures high-quality data collection while acknowledging and addressing potential limitations, providing a solid foundation for analyzing financial well-being across diverse populations.
-
-## Acknowledgements
+## Acknowledgements {#sec-ack}
 
 We would like to express our gratitude to the developers and contributors of R [@citeR] as well as several R packages that were essential for the analysis and visualization of the data in this report. The following R packages provided indispensable tools and functionalities:
 
