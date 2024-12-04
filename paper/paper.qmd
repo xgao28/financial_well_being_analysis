@@ -85,6 +85,8 @@ Health (HEALTH): Self-reported general health, rated on a 5-point Likert scale f
 
 Stress (DISTRESS): Perceived level of stress, rated on a 5-point Likert scale from 1 (Not at all) to 5 (Extremely).
 
+Note that this study employs categorical grouping for variables that could be continuous (such as age and income). This approach offers several advantages in survey research: it improves interpretability of results across demographic groups, facilitates statistical comparisons between meaningful socioeconomic segments, and aligns with typical policy and program planning categories. For sensitive variables like income and age, categorical grouping also helps protect respondent privacy while maintaining sufficient detail for analysis. Additionally, the use of standardized categories (in age, education, and income) enables easier comparison with other survey research and demographic studies.
+
 ### Additional Variables
 
 Lusardi and Mitchell Financial Knowledge Scale Score (LMscore): A 3-item summative scale measuring financial literacy, particularly in planning and decision-making.
